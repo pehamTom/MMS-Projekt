@@ -10,6 +10,7 @@ public class Main {
 		//test
 		//haha
 		//Sdfsdf
+		System.out.println("Hello World");
 	}
 
 }
