@@ -8,7 +8,7 @@ public class Main {
 		//change to source code
 		//seperate change
 		System.out.println("I am master dominik!");
-		//oasdkölfj
+
 	}
 
 }
