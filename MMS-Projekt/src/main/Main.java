@@ -7,6 +7,7 @@ public class Main {
 		System.out.println("Test");
 		//change to source code
 		//seperate change
+		System.out.println("I am master dominik!");
 	}
 
 }
