@@ -36,7 +36,7 @@ public class Window extends JFrame{
 	private void init() {
 		setPreferredSize(new Dimension(1080, 720));
 		currentWorkingDirectory = new File(System.getProperty("user.dir")); //set current working directory to users directory
-		testPanel = new ImagePanel(new Dimension(500, 500));
+		testPanel = new ImagePanel(new Dimension(500, 500)); //Maybe declared at wrong place
 		
 		final JToolBar toolBar = new JToolBar();
 
