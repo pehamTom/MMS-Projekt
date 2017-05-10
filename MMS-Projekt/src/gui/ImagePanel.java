@@ -14,13 +14,11 @@ public class ImagePanel extends JPanel {
 
 	private static final long serialVersionUID = -2967388993250812769L;
 	
-	private Dimension dim;
-	
 	private BufferedImage img;
 	
 	/** Creates a ImagePanel and specifies initial Dimensions */
 	public ImagePanel(Dimension dim) {
-		this.dim = dim;
+		setSize(dim);
 	}
 	
 	/** Loads an image into this panel */
@@ -39,7 +37,7 @@ public class ImagePanel extends JPanel {
 	
 	@Override
 	public Dimension getPreferredSize() {
-		return dim;
+		return getSize();
 	}
 	
 	@Override
@@ -55,8 +53,9 @@ public class ImagePanel extends JPanel {
 	@Override
 	public void paintComponent(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
+		Dimension dim = getSize();
 		g2d.setColor(Color.white);
-		g2d.fillRect(300, 0, dim.width, dim.height);
+		g2d.fillRect(0, 0, dim.width, dim.height);
         if(img != null) {
 	        int x = (dim.width - img.getWidth(null))/2;
 	        int y = (dim.height - img.getHeight(null))/2;

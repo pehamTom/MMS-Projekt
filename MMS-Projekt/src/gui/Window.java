@@ -8,6 +8,8 @@ import javax.swing.filechooser.FileFilter;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -22,6 +24,8 @@ import java.util.Stack;
 public class Window extends JFrame{
 
 	private static final long serialVersionUID = 1L;
+	private static final Dimension DEFAULT_WINDOW_DIMENSION = new Dimension(1080, 720);
+	private static final double IMAGE_PANEL_SIZE_RELATIVE = 0.9;
 	
 	private BufferedImage currentImage;
 	private Stack<BufferedImage> saveChangesBuffer; //TODO: No functionality yet, will be used for an UNDO option
@@ -29,15 +33,20 @@ public class Window extends JFrame{
 	private ImagePanel testPanel; //TODO: REMOVE LATER!!!
 
 	public Window(String title) throws HeadlessException {
+		this(title, DEFAULT_WINDOW_DIMENSION);
+	}
+	
+	public Window(String title, Dimension windowDimension) {
 		super(title);
+		this.setSize(windowDimension);
 		init();
 	}
 	
 	private void init() {
-		setPreferredSize(new Dimension(1080, 720));
+		setPreferredSize(DEFAULT_WINDOW_DIMENSION);
 		currentWorkingDirectory = new File(System.getProperty("user.dir")); //set current working directory to users directory
-		testPanel = new ImagePanel(new Dimension(500, 500));
-		
+		testPanel = new ImagePanel(new Dimension((int)(getSize().width*IMAGE_PANEL_SIZE_RELATIVE), 
+												 (int)(getSize().height*IMAGE_PANEL_SIZE_RELATIVE)));
 		final JToolBar toolBar = new JToolBar();
 
 		JFrame tempFrame = this;
@@ -64,14 +73,8 @@ public class Window extends JFrame{
 				if(fc.showOpenDialog(tempFrame) == JFileChooser.APPROVE_OPTION) {
 					try {
 						currentImage = ImageIO.read(new FileInputStream(fc.getSelectedFile()));
-						
-						//TODO: JPanel has to be loaded into specific box
-						//TODO: ONLY A TEST!!! REMOVE LATER!!!
 						testPanel.loadImage(currentImage);
-						
-						System.out.println("No error occured");
-						//====================================
-						
+						setMinimumSize(new Dimension(currentImage.getWidth(), currentImage.getHeight()));
 					} catch(IOException exception) {
 						JOptionPane.showMessageDialog(tempFrame, exception.getMessage());
 					}
@@ -88,7 +91,7 @@ public class Window extends JFrame{
 				if(fc.showSaveDialog(tempFrame) == JFileChooser.APPROVE_OPTION && isValidExtension(fc.getSelectedFile().toString())) {
 					String fileName = fc.getSelectedFile().toString();
 					try {
-						ImageIO.write(currentImage, fileName.substring(fileName.lastIndexOf('.')), new FileOutputStream(fc.getSelectedFile()));
+						ImageIO.write(currentImage, fileName.substring(fileName.lastIndexOf('.')+1), new FileOutputStream(fc.getSelectedFile()));
 					} catch (FileNotFoundException exception) {
 						JOptionPane.showMessageDialog(tempFrame, exception.getMessage());
 					} catch (IOException exception) {
@@ -105,8 +108,18 @@ public class Window extends JFrame{
             }
         });
         toolBar.add(button);
+        //update when user resizes
+        this.getRootPane().addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                // This is only called when the user releases the mouse button.
+                testPanel.setSize(getSize());
+                testPanel.paint(getGraphics());
+                paint(getGraphics());
+            }
+        });
 
         getContentPane().add(toolBar, BorderLayout.NORTH);
+        getContentPane().add(testPanel, BorderLayout.CENTER);
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
