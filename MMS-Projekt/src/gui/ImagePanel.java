@@ -5,24 +5,25 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
-/** Allows for display of a BufferedImage for Preview purposes */
+
 public class ImagePanel extends JPanel {
 
 	private static final long serialVersionUID = -2967388993250812769L;
 	
 	private BufferedImage img;
 	
-	/** Creates a ImagePanel and specifies initial Dimensions */
 	public ImagePanel(Dimension dim) {
 		setSize(dim);
 	}
 	
 	/** Loads an image into this panel */
-	public void loadImage(Image img) {
+	public BufferedImage loadImage(Image img) {
+		BufferedImage temp = this.img;
 		if(img instanceof BufferedImage) {
 			this.img = (BufferedImage) img;
 		}else{
@@ -33,6 +34,23 @@ public class ImagePanel extends JPanel {
 		}
 		revalidate();
 		repaint();
+		return temp;
+	}
+	
+	public BufferedImage rotate() { 
+		int width = img.getWidth();
+		int height = img.getHeight();
+		BufferedImage rotated = new BufferedImage(height, width, BufferedImage.TYPE_INT_ARGB);
+
+		AffineTransform rotation = new AffineTransform();
+		rotation.translate(0.5*height, 0.5*width);
+		rotation.rotate(Math.PI/2);
+		rotation.translate(-0.5*width, -0.5*height);
+		Graphics2D g = rotated.createGraphics();
+		g.drawImage(img, rotation,null);
+		g.dispose();
+		
+		return loadImage(rotated);
 	}
 	
 	@Override
@@ -50,6 +68,8 @@ public class ImagePanel extends JPanel {
 		return getPreferredSize();
 	}
 	
+	
+	
 	@Override
 	public void paintComponent(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
@@ -57,16 +77,10 @@ public class ImagePanel extends JPanel {
 		g2d.setColor(Color.white);
 		g2d.fillRect(0, 0, dim.width, dim.height);
         if(img != null) {
-	        int x = (dim.width - img.getWidth(null))/2;
-	        int y = (dim.height - img.getHeight(null))/2;
-	        g2d.drawImage(img, null, x, y);
+	        g2d.drawImage(img, null, 0, 0);
         }
 	}
 	
-	/**
-	 * Used again later
-	 * @return
-	 */
 	public BufferedImage getBufferedImage() {
 		return img;
 	}
