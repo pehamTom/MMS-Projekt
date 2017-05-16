@@ -5,41 +5,76 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
-/** Allows for display of a BufferedImage for Preview purposes */
+
 public class ImagePanel extends JPanel {
 
 	private static final long serialVersionUID = -2967388993250812769L;
 	
-	private Dimension dim;
-	
 	private BufferedImage img;
 	
-	/** Creates a ImagePanel and specifies initial Dimensions */
 	public ImagePanel(Dimension dim) {
-		this.dim = dim;
+		setSize(dim);
 	}
 	
 	/** Loads an image into this panel */
-	public void loadImage(Image img) {
+	public BufferedImage loadImage(Image img) {
+		BufferedImage temp = this.img;
+		int width = img.getWidth(null);
+		int height = img.getHeight(null);
 		if(img instanceof BufferedImage) {
 			this.img = (BufferedImage) img;
 		}else{
-			BufferedImage bi = new BufferedImage(img.getWidth(null),
-					img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+			
+			BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 			bi.getGraphics().drawImage(img, 0, 0, null);
 			this.img = bi;
+		
 		}
+		if(width > getWidth() || height > getHeight()) {
+			if(width > getWidth()) {
+				double scaleFactor = (double)getWidth()/width;
+				width *= scaleFactor;
+				height *= scaleFactor;
+			}
+			if(height > getHeight()) {
+				double scaleFactor = (double)getHeight()/height;
+				height *= scaleFactor;
+				width *= scaleFactor;
+			} 
+			img = img.getScaledInstance(width, height, Image.SCALE_DEFAULT);
+			BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+			bi.getGraphics().drawImage(img, 0, 0, null);
+			this.img = bi;
+		} 
 		revalidate();
 		repaint();
+		return temp;
+	}
+	
+	public BufferedImage rotate() { 
+		int width = img.getWidth();
+		int height = img.getHeight();
+		BufferedImage rotated = new BufferedImage(height, width, BufferedImage.TYPE_INT_ARGB);
+
+		AffineTransform rotation = new AffineTransform();
+		rotation.translate(0.5*height, 0.5*width);
+		rotation.rotate(Math.PI/2);
+		rotation.translate(-0.5*width, -0.5*height);
+		Graphics2D g = rotated.createGraphics();
+		g.drawImage(img, rotation,null);
+		g.dispose();
+		
+		return loadImage(rotated);
 	}
 	
 	@Override
 	public Dimension getPreferredSize() {
-		return dim;
+		return getSize();
 	}
 	
 	@Override
@@ -52,22 +87,19 @@ public class ImagePanel extends JPanel {
 		return getPreferredSize();
 	}
 	
+	
+	
 	@Override
 	public void paintComponent(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
+		Dimension dim = getSize();
 		g2d.setColor(Color.white);
-		g2d.fillRect(300, 0, dim.width, dim.height);
+		g2d.fillRect(0, 0, dim.width, dim.height);
         if(img != null) {
-	        int x = (dim.width - img.getWidth(null))/2;
-	        int y = (dim.height - img.getHeight(null))/2;
-	        g2d.drawImage(img, null, x, y);
+	        g2d.drawImage(img, null, 0, 0);
         }
 	}
 	
-	/**
-	 * Used again later
-	 * @return
-	 */
 	public BufferedImage getBufferedImage() {
 		return img;
 	}
