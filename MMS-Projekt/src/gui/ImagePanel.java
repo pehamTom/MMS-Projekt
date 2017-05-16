@@ -24,14 +24,33 @@ public class ImagePanel extends JPanel {
 	/** Loads an image into this panel */
 	public BufferedImage loadImage(Image img) {
 		BufferedImage temp = this.img;
+		int width = img.getWidth(null);
+		int height = img.getHeight(null);
 		if(img instanceof BufferedImage) {
 			this.img = (BufferedImage) img;
 		}else{
-			BufferedImage bi = new BufferedImage(img.getWidth(null),
-					img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+			
+			BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 			bi.getGraphics().drawImage(img, 0, 0, null);
 			this.img = bi;
+		
 		}
+		if(width > getWidth() || height > getHeight()) {
+			if(width > getWidth()) {
+				double scaleFactor = (double)getWidth()/width;
+				width *= scaleFactor;
+				height *= scaleFactor;
+			}
+			if(height > getHeight()) {
+				double scaleFactor = (double)getHeight()/height;
+				height *= scaleFactor;
+				width *= scaleFactor;
+			} 
+			img = img.getScaledInstance(width, height, Image.SCALE_DEFAULT);
+			BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+			bi.getGraphics().drawImage(img, 0, 0, null);
+			this.img = bi;
+		} 
 		revalidate();
 		repaint();
 		return temp;

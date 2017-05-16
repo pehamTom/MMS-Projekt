@@ -3,6 +3,8 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 
+import filters.GreyScaleFilter;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
@@ -24,7 +26,6 @@ public class Window extends JFrame{
 	private static final Dimension DEFAULT_WINDOW_DIMENSION = new Dimension(1080, 720);
 	private static final double IMAGE_PANEL_SIZE_RELATIVE = 0.9;
 	
-	private BufferedImage currentImage;
 	private final UndoRedoManager undoRedo;
 	private File currentWorkingDirectory;
 	private ImagePanel imagePanel; 
@@ -72,8 +73,8 @@ public class Window extends JFrame{
 				fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 				if(fc.showOpenDialog(tempFrame) == JFileChooser.APPROVE_OPTION) {
 					try {
-						currentImage = ImageIO.read(new FileInputStream(fc.getSelectedFile()));
-						imagePanel.loadImage(currentImage);
+						BufferedImage tempImage = ImageIO.read(new FileInputStream(fc.getSelectedFile()));
+						imagePanel.loadImage(tempImage);
 					} catch(IOException exception) {
 						JOptionPane.showMessageDialog(tempFrame, exception.getMessage());
 					}
@@ -101,7 +102,7 @@ public class Window extends JFrame{
 				if(fc.showSaveDialog(tempFrame) == JFileChooser.APPROVE_OPTION && isValidExtension(fc.getSelectedFile().toString())) {
 					String fileName = fc.getSelectedFile().toString();
 					try {
-						ImageIO.write(currentImage, fileName.substring(fileName.lastIndexOf('.')+1), new FileOutputStream(fc.getSelectedFile())); //if user entered valid extension, writes file
+						ImageIO.write(imagePanel.getBufferedImage(), fileName.substring(fileName.lastIndexOf('.')+1), new FileOutputStream(fc.getSelectedFile())); //if user entered valid extension, writes file
 					} catch (FileNotFoundException exception) {
 						JOptionPane.showMessageDialog(tempFrame, exception.getMessage());
 					} catch (IOException exception) {
@@ -114,7 +115,12 @@ public class Window extends JFrame{
         //create button for menu
         final JButton dataMenu = createPopupMenu("Data", dataPopup);
         toolBar.add(dataMenu);
+        
         final JButton filterMenu = createPopupMenu("Filter", filterPopup);
+        //===========================================================
+        //TODO: ADD YOUR FILTERS HERE! EXAMPLE BELOW
+        //===========================================================
+        filterPopup.add(createFilterButton(new GreyScaleFilter()));
         toolBar.add(filterMenu);
        
         final JButton undo = new JButton("Undo");
@@ -123,11 +129,9 @@ public class Window extends JFrame{
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				super.mouseClicked(e);
-				BufferedImage undoImg = undoRedo.undo();
+				BufferedImage undoImg = undoRedo.undo(imagePanel.getBufferedImage());
 				if(undoImg == null) return;
-				
-				currentImage = undoImg;
-				imagePanel.loadImage(currentImage);
+				imagePanel.loadImage(undoImg);
 			}
         	
 		});
@@ -139,12 +143,9 @@ public class Window extends JFrame{
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				super.mouseClicked(e);
-				BufferedImage redoImg = undoRedo.redo();
-				
+				BufferedImage redoImg = undoRedo.redo(imagePanel.getBufferedImage());
 				if(redoImg == null) return;
-				
-				currentImage = redoImg;
-				imagePanel.loadImage(currentImage);
+				imagePanel.loadImage(redoImg);
 			}
 		});
         toolBar.add(redo);
@@ -182,4 +183,19 @@ public class Window extends JFrame{
         return button;
 	}
 	
+	private JButton createFilterButton(FilterInterface filter) {
+		JButton filterButton = new JButton(filter.toString());
+		filterButton.addMouseListener(new MouseAdapter() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				super.mouseClicked(e);
+				BufferedImage img = (BufferedImage) filter.runFilter(imagePanel.getBufferedImage(), null); //maybe there is a need for properties later
+			
+				undoRedo.addChange(imagePanel.loadImage(img)); 
+			}
+			
+		});
+		return filterButton;
+	}
 }

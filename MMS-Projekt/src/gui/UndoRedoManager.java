@@ -18,19 +18,21 @@ public class UndoRedoManager {
 		undone.clear(); //stored undo's are invalid
 	}
 	
-	public BufferedImage undo() {
+	public BufferedImage undo(BufferedImage currentImage) {
 		if(done.isEmpty()) return null;
 		
-		BufferedImage img = done.pop();
-		undone.push(img);
-		return img;
+		if(currentImage != null)
+			undone.push(currentImage);
+		
+		return done.pop();
 	}
 	
-	public BufferedImage redo() {
+	public BufferedImage redo(BufferedImage currentImage) {
 		if(undone.isEmpty()) return null;
 		
-		BufferedImage img = undone.pop();
-		done.push(img);
-		return img;
+		if(currentImage != null)
+			done.push(currentImage);
+		
+		return undone.pop();
 	}
 }
