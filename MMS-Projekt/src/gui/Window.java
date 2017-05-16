@@ -44,8 +44,10 @@ public class Window extends JFrame{
 	private void init() {
 		setPreferredSize(DEFAULT_WINDOW_DIMENSION);
 		currentWorkingDirectory = new File(System.getProperty("user.dir")); //set current working directory to users directory
+
 		imagePanel = new ImagePanel(new Dimension((int)(getSize().width*IMAGE_PANEL_SIZE_RELATIVE), 
 												 (int)(getSize().height*IMAGE_PANEL_SIZE_RELATIVE)));
+
 		final JToolBar toolBar = new JToolBar();
 		toolBar.setLayout(new FlowLayout());
 
