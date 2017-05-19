@@ -11,7 +11,7 @@ import pixels.Pixel;
 public class ExtractBlueFilter implements FilterInterface{
 
 	@Override
-	public Image runFilter(BufferedImage img, Properties settings) {
+	public Image runFilter(BufferedImage img) {
 		BufferedImage blueImg = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		
 		for(int x = 0; x < img.getWidth(); x++) {
@@ -20,12 +20,6 @@ public class ExtractBlueFilter implements FilterInterface{
 			}
 		}
 		return blueImg;
-	}
-
-	@Override
-	public String[] mandatoryProperties() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 	
 	@Override 

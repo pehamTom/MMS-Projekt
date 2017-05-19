@@ -12,7 +12,7 @@ public class GreyScaleFilter implements FilterInterface{
 
 
 	@Override
-	public Image runFilter(BufferedImage image, Properties settings) {
+	public Image runFilter(BufferedImage image) {
 		BufferedImage filteredImg = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
 		
 		for(int y = 0; y < filteredImg.getHeight(); y++) {
@@ -24,11 +24,6 @@ public class GreyScaleFilter implements FilterInterface{
 			}
 		}
 		return filteredImg;
-	}
-
-	@Override
-	public String[] mandatoryProperties() {
-		return new String[] { };
 	}
  
 	@Override

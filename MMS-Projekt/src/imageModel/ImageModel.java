@@ -186,7 +186,7 @@ public class ImageModel {
 	}
 	
 	public void applyFilter(FilterInterface filter) {
-		BufferedImage filteredImage = (BufferedImage) filter.runFilter(image, null);
+		BufferedImage filteredImage = (BufferedImage) filter.runFilter(image);
 		this.image = filteredImage;
 		fireImageChangedEvent(filteredImage);
 	}
