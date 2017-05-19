@@ -2,8 +2,8 @@ package filters;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import gui.FilterInterface;
-import pixels.Pixel;
+
+import pixels.RGBAPixel;
 
 /**
  * Filters out red and green from the image
@@ -21,7 +21,7 @@ public class ExtractBlueFilter implements FilterInterface{
 		
 		for(int x = 0; x < img.getWidth(); x++) {
 			for(int y = 0; y < img.getHeight(); y++) {
-				blueImg.setRGB(x, y, Pixel.generateRGBAPixel(0, 0, Pixel.getBlue(img.getRGB(x, y)), 255));
+				blueImg.setRGB(x, y, RGBAPixel.generateRGBAPixel(0, 0, RGBAPixel.getBlue(img.getRGB(x, y)), 255));
 			}
 		}
 		return blueImg;

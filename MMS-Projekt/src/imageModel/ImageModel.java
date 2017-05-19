@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-import gui.FilterInterface;
+import filters.FilterInterface;
 
 /**
  * Model responsible for all actions and transformations performed on images in the gui
@@ -189,7 +189,6 @@ public class ImageModel {
 		g.setColor(color);
 		String fontString = "MS Gothic";
 		Font font = new Font(fontString, Font.PLAIN, size);
-		System.out.println(x + " " + y);
 		g.setFont(font);
 		g.drawString(text, x, y); //then add text
 		g.dispose();
@@ -233,9 +232,9 @@ public class ImageModel {
 			return; //no negative width or height allowed so we return
 		}
 		BufferedImage subImage = image.getSubimage(startX, startY, endX-startX, endY-startY);
-		BufferedImage croppedImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+		BufferedImage croppedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = croppedImage.createGraphics();
-		g.drawImage(subImage, startX, startY, null);
+		g.drawImage(subImage, 0, 0, null);
 		
 		this.image = croppedImage;
 		fireImageChangedEvent(croppedImage);

@@ -15,6 +15,7 @@ import imageModel.ImageModel;
  * @author Tom
  *
  */
+@SuppressWarnings("serial")
 public class CropTool extends Tool {
 
 	/**

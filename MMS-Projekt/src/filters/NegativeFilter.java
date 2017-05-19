@@ -2,8 +2,8 @@ package filters;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import gui.FilterInterface;
-import pixels.Pixel;
+
+import pixels.RGBAPixel;
 
 /**
  * Fully inverts source image.
@@ -22,10 +22,10 @@ public class NegativeFilter implements FilterInterface {
 		for(int y = 0; y < filteredImg.getHeight(); y++) {
 			for(int x = 0; x < filteredImg.getWidth(); x++) {
 				int rgba = image.getRGB(x, y);
-				int invBlue = 255 - Pixel.getBlue(rgba);
-				int invGreen = 255 - Pixel.getGreen(rgba);
-				int invRed = 255 - Pixel.getRed(rgba);
-				int grey = Pixel.generateRGBAPixel(invRed, invGreen, invBlue, 255);
+				int invBlue = 255 - RGBAPixel.getBlue(rgba);
+				int invGreen = 255 - RGBAPixel.getGreen(rgba);
+				int invRed = 255 - RGBAPixel.getRed(rgba);
+				int grey = RGBAPixel.generateRGBAPixel(invRed, invGreen, invBlue, 255);
 				filteredImg.setRGB(x, y, grey);
 			}
 		}

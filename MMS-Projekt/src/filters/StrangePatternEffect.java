@@ -3,9 +3,13 @@ package filters;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 
-import gui.FilterInterface;
-import pixels.Pixel;
+import pixels.RGBAPixel;
 
+/**
+ * Doesn't really do anything useful but I like the result so I keep it in
+ * @author Tom
+ *
+ */
 public class StrangePatternEffect implements FilterInterface {
 
 	static int ARRAYSIZE = 100;
@@ -20,10 +24,10 @@ public class StrangePatternEffect implements FilterInterface {
 						if(i+x < img.getWidth() && j+y < img.getHeight()) {
 							double factor = pattern[i][j];
 							int rgb = img.getRGB(x+i, y+j);
-							int red = (int) (Pixel.getRed(rgb)*factor);
-							int blue = (int) (Pixel.getBlue(rgb)*factor);
-							int green = (int) (Pixel.getGreen(rgb)*factor);
-							int newRGB = Pixel.generateRGBAPixel(red, green, blue, 255);
+							int red = (int) (RGBAPixel.getRed(rgb)*factor);
+							int blue = (int) (RGBAPixel.getBlue(rgb)*factor);
+							int green = (int) (RGBAPixel.getGreen(rgb)*factor);
+							int newRGB = RGBAPixel.generateRGBAPixel(red, green, blue, 255);
 							dottedImage.setRGB(x+i, y+j, newRGB);
 						}
 					}
@@ -33,6 +37,11 @@ public class StrangePatternEffect implements FilterInterface {
 		return dottedImage;
 	}
 
+	/**
+	 * Create completely arbitrary pattern
+	 * @return
+	 * 		Matrix to be used in {@link StrangePatternEffect.runFilter}
+	 */
 	private double[][] createPattern() {
 		double[][] pattern = new double[ARRAYSIZE][ARRAYSIZE];
 		double factor = ARRAYSIZE/2;
