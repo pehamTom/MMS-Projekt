@@ -57,17 +57,29 @@ public class ImageModel {
 	 * 		y-position to set the image to
 	 */
 	public void loadImage(Image image, int x, int y) {
-		int width = image.getWidth(null);
-		int height = image.getHeight(null);
-		if(image instanceof BufferedImage) {
-			this.image = (BufferedImage) image;
-		}else{
-			BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-			bi.getGraphics().drawImage(image, 0, 0, null);
-			this.image = bi;
+		if(image == null) {
+			this.image = null;
 		}
-		
+		else {
+			int width = image.getWidth(null);
+			int height = image.getHeight(null);
+			if(image instanceof BufferedImage) {
+				this.image = (BufferedImage) image;
+			}else{
+				BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+				bi.getGraphics().drawImage(image, 0, 0, null);
+				this.image = bi;
+			}
+		}
 		fireImageChangedEvent(this.image); //signify listners of change
+	}
+	
+	/**
+	 * unloads the currently held image
+	 */
+	public void unloadImage() {
+		image = null;
+		fireImageChangedEvent(this.image);
 	}
 	/**
 	 * Get width of underlying Image
@@ -125,7 +137,8 @@ public class ImageModel {
 	public void resizeImage(int width, int height) {
 		Image resized = image.getScaledInstance(width, height, Image.SCALE_DEFAULT);
 		BufferedImage resizedBuffered = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		resizedBuffered.getGraphics().drawImage(resized, width, height, null);
+		Graphics2D g = resizedBuffered.createGraphics();
+		g.drawImage(resized, x, y, null);
 		
 		image = resizedBuffered;
 		fireImageChangedEvent(resizedBuffered); //signify listeners to change

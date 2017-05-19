@@ -2,19 +2,12 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
 
 import imageModel.ImageEvent;
 import imageModel.ImageListener;
@@ -24,7 +17,6 @@ import imageModel.ImageModel;
 /**
  * The view to the underlying ImageModel
  * Takes care of displaying the image in the frame
- * Also uses a scrollbar if image should be to big
  * Extends {@link JPanel}
  * @author Tom
  *
@@ -46,15 +38,16 @@ public class ImagePanel extends JPanel {
 
 			@Override
 			public void imageChanged(ImageEvent event) {
+				BufferedImage image = event.getChangedImage();
+				if(image != null) {
+					setPreferredSize(new Dimension(image.getWidth(), image.getHeight()));
+					revalidate();
+				}
 				repaint();	//if image is changed repaint the image
 			}
 		});
 	}
 	
-	@Override
-	public Dimension getPreferredSize() {
-		return getSize();
-	}
 	
 	@Override
 	public Dimension getMinimumSize() {

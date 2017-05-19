@@ -2,13 +2,19 @@ package filters;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.util.Properties;
-
 import gui.FilterInterface;
 import pixels.Pixel;
 
+/**
+ * Filter out blue and green parts of image
+ * @author Tom
+ *
+ */
 public class ExtractRedFilter implements FilterInterface {
 
+	/**
+	 * Filter out blue and green parts of image
+	 */
 	@Override
 	public Image runFilter(BufferedImage img) {
 		BufferedImage redImg = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);

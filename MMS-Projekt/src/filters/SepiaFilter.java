@@ -2,15 +2,20 @@ package filters;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.util.Properties;
-
 import gui.FilterInterface;
 import pixels.Pixel;
 
-/** Just to show correct handles in ComboBox */
+/**
+ * Display sepia colored image
+ * Taken from the SepiaFilter implementation of the exercises
+ * @author Tom
+ *
+ */
 public class SepiaFilter implements FilterInterface{
 
-
+	/**
+	 * Color the image in a sepia color
+	 */
 	@Override
 	public Image runFilter(BufferedImage image) {
 		BufferedImage filteredImg = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
