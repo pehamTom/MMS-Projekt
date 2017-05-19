@@ -2,74 +2,53 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+
+import imageModel.ImageEvent;
+import imageModel.ImageListener;
+import imageModel.ImageModel;
 
 
+/**
+ * The view to the underlying ImageModel
+ * Takes care of displaying the image in the frame
+ * Also uses a scrollbar if image should be to big
+ * Extends {@link JPanel}
+ * @author Tom
+ *
+ */
+@SuppressWarnings("serial")
 public class ImagePanel extends JPanel {
-
-	private static final long serialVersionUID = -2967388993250812769L;
 	
-	private BufferedImage img;
+	private final ImageModel model;
 	
-	public ImagePanel(Dimension dim) {
-		setSize(dim);
-	}
-	
-	/** Loads an image into this panel */
-	public BufferedImage loadImage(Image img) {
-		BufferedImage temp = this.img;
-		int width = img.getWidth(null);
-		int height = img.getHeight(null);
-		if(img instanceof BufferedImage) {
-			this.img = (BufferedImage) img;
-		}else{
-			
-			BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-			bi.getGraphics().drawImage(img, 0, 0, null);
-			this.img = bi;
+	/**
+	 * Constructor for this Panel
+	 * @param model
+	 * 			{@link ImageModel} to use for displaying the image
+	 */
+	public ImagePanel(ImageModel model) {
+		this.model = model;
 		
-		}
-		if(width > getWidth() || height > getHeight()) {
-			if(width > getWidth()) {
-				double scaleFactor = (double)getWidth()/width;
-				width *= scaleFactor;
-				height *= scaleFactor;
+		model.addImageListener(new ImageListener() {
+
+			@Override
+			public void imageChanged(ImageEvent event) {
+				repaint();	//if image is changed repaint the image
 			}
-			if(height > getHeight()) {
-				double scaleFactor = (double)getHeight()/height;
-				height *= scaleFactor;
-				width *= scaleFactor;
-			} 
-			img = img.getScaledInstance(width, height, Image.SCALE_DEFAULT);
-			BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-			bi.getGraphics().drawImage(img, 0, 0, null);
-			this.img = bi;
-		} 
-		revalidate();
-		repaint();
-		return temp;
-	}
-	
-	public BufferedImage rotate() { 
-		int width = img.getWidth();
-		int height = img.getHeight();
-		BufferedImage rotated = new BufferedImage(height, width, BufferedImage.TYPE_INT_ARGB);
-
-		AffineTransform rotation = new AffineTransform();
-		rotation.translate(0.5*height, 0.5*width);
-		rotation.rotate(Math.PI/2);
-		rotation.translate(-0.5*width, -0.5*height);
-		Graphics2D g = rotated.createGraphics();
-		g.drawImage(img, rotation,null);
-		g.dispose();
-		
-		return loadImage(rotated);
+		});
 	}
 	
 	@Override
@@ -88,20 +67,16 @@ public class ImagePanel extends JPanel {
 	}
 	
 	
-	
 	@Override
 	public void paintComponent(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
 		Dimension dim = getSize();
 		g2d.setColor(Color.white);
 		g2d.fillRect(0, 0, dim.width, dim.height);
-        if(img != null) {
-	        g2d.drawImage(img, null, 0, 0);
+        if(model.getImage() != null) {
+	        g2d.drawImage(model.getImage(), null, 0, 0);
         }
 	}
 	
-	public BufferedImage getBufferedImage() {
-		return img;
-	}
 	
 }
