@@ -10,7 +10,7 @@ import pixels.Pixel;
 public class ExtractRedFilter implements FilterInterface {
 
 	@Override
-	public Image runFilter(BufferedImage img, Properties settings) {
+	public Image runFilter(BufferedImage img) {
 		BufferedImage redImg = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		
 		for(int x = 0; x < img.getWidth(); x++) {
@@ -19,12 +19,6 @@ public class ExtractRedFilter implements FilterInterface {
 			}
 		}
 		return redImg;
-	}
-
-	@Override
-	public String[] mandatoryProperties() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 	
 	@Override
