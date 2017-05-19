@@ -3,7 +3,12 @@ package filters;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 
-public class FlipeVerticalFilter implements FilterInterface {
+/**
+ * Flips Image vertically
+ * @author Tom
+ *
+ */
+public class FlipVerticallyFilter implements FilterInterface {
 
 	@Override
 	public Image runFilter(BufferedImage img) {

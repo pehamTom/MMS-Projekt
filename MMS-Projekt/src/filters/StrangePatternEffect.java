@@ -5,6 +5,11 @@ import java.awt.image.BufferedImage;
 
 import pixels.RGBAPixel;
 
+/**
+ * Doesn't really do anything useful but I like the result so I keep it in
+ * @author Tom
+ *
+ */
 public class StrangePatternEffect implements FilterInterface {
 
 	static int ARRAYSIZE = 100;
@@ -32,6 +37,11 @@ public class StrangePatternEffect implements FilterInterface {
 		return dottedImage;
 	}
 
+	/**
+	 * Create completely arbitrary pattern
+	 * @return
+	 * 		Matrix to be used in {@link StrangePatternEffect.runFilter}
+	 */
 	private double[][] createPattern() {
 		double[][] pattern = new double[ARRAYSIZE][ARRAYSIZE];
 		double factor = ARRAYSIZE/2;

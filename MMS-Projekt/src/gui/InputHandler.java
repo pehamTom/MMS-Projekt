@@ -57,4 +57,13 @@ public class InputHandler{
 		return JColorChooser.showDialog(parentComponent, dialogMessage, Color.BLACK);
 	}
 	
+	/**
+	 * Display message to the user
+	 * @param dialogMessage
+	 * 			message to be displayed
+	 */
+	public void showMessage(String dialogMessage) {
+		JOptionPane.showMessageDialog(parentComponent, dialogMessage);
+	}
+	
 }

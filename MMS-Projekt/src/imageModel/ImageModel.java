@@ -189,7 +189,6 @@ public class ImageModel {
 		g.setColor(color);
 		String fontString = "MS Gothic";
 		Font font = new Font(fontString, Font.PLAIN, size);
-		System.out.println(x + " " + y);
 		g.setFont(font);
 		g.drawString(text, x, y); //then add text
 		g.dispose();

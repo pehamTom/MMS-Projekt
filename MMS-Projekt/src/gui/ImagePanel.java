@@ -9,9 +9,6 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-
 import imageModel.ImageEvent;
 import imageModel.ImageListener;
 import imageModel.ImageModel;
