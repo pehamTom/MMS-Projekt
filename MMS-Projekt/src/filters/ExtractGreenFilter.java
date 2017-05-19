@@ -2,7 +2,7 @@ package filters;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import gui.FilterInterface;
+
 import pixels.Pixel;
 
 /**

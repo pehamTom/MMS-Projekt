@@ -3,8 +3,6 @@ package filters;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 
-import gui.FilterInterface;
-
 public class FlipeVerticalFilter implements FilterInterface {
 
 	@Override

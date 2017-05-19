@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-import gui.FilterInterface;
+import filters.FilterInterface;
 
 /**
  * Model responsible for all actions and transformations performed on images in the gui

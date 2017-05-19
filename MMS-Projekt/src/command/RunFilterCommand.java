@@ -1,6 +1,6 @@
 package command;
 
-import gui.FilterInterface;
+import filters.FilterInterface;
 import imageModel.ImageModel;
 
 /**
