@@ -2,8 +2,6 @@ package filters;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.util.Properties;
-
 import gui.FilterInterface;
 import pixels.Pixel;
 
@@ -14,6 +12,9 @@ import pixels.Pixel;
  */
 public class NegativeFilter implements FilterInterface {
 
+	/**
+	 * Full inverts given source picture
+	 */
 	@Override
 	public Image runFilter(BufferedImage image) {
 		BufferedImage filteredImg = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_BYTE_GRAY);

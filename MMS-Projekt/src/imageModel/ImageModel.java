@@ -57,17 +57,29 @@ public class ImageModel {
 	 * 		y-position to set the image to
 	 */
 	public void loadImage(Image image, int x, int y) {
-		int width = image.getWidth(null);
-		int height = image.getHeight(null);
-		if(image instanceof BufferedImage) {
-			this.image = (BufferedImage) image;
-		}else{
-			BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-			bi.getGraphics().drawImage(image, 0, 0, null);
-			this.image = bi;
+		if(image == null) {
+			this.image = null;
 		}
-		
+		else {
+			int width = image.getWidth(null);
+			int height = image.getHeight(null);
+			if(image instanceof BufferedImage) {
+				this.image = (BufferedImage) image;
+			}else{
+				BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+				bi.getGraphics().drawImage(image, 0, 0, null);
+				this.image = bi;
+			}
+		}
 		fireImageChangedEvent(this.image); //signify listners of change
+	}
+	
+	/**
+	 * unloads the currently held image
+	 */
+	public void unloadImage() {
+		image = null;
+		fireImageChangedEvent(this.image);
 	}
 	/**
 	 * Get width of underlying Image
@@ -125,7 +137,8 @@ public class ImageModel {
 	public void resizeImage(int width, int height) {
 		Image resized = image.getScaledInstance(width, height, Image.SCALE_DEFAULT);
 		BufferedImage resizedBuffered = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		resizedBuffered.getGraphics().drawImage(resized, width, height, null);
+		Graphics2D g = resizedBuffered.createGraphics();
+		g.drawImage(resized, x, y, null);
 		
 		image = resizedBuffered;
 		fireImageChangedEvent(resizedBuffered); //signify listeners to change
@@ -185,10 +198,47 @@ public class ImageModel {
 		fireImageChangedEvent(addedText); //signify listeners of change
 	}
 	
+	/**
+	 * Apply filter to the models image
+	 * @param filter
+	 * 			Filter to be applied to the image
+	 */
 	public void applyFilter(FilterInterface filter) {
 		BufferedImage filteredImage = (BufferedImage) filter.runFilter(image);
 		this.image = filteredImage;
 		fireImageChangedEvent(filteredImage);
+	}
+	
+	/**
+	 * Crop Image
+	 * @param startX
+	 * 		x-coordinate from where to start the crop
+	 * @param startY
+	 * 		y-coordinate from where to start the crop
+	 * @param endX
+	 * 		x-coordinate to crop to
+	 * @param endY
+	 * 		y-coordinate to crop to
+	 */
+	public void cropImage(int startX, int startY, int endX, int endY) {
+		//if coordinates are out of bound, just set them to the edge of the image
+		startX = startX < x ? x : startX;
+		startY = startY < y ? y : startY;
+		endX = endX > x+getWidth() ? x+getWidth() : endX;
+		endY = endY > y+getHeight() ? y+getHeight() : endY;
+		int width = endX-startX;
+		int height = endY-startY;
+		
+		if(width <= 0 || height <= 0) {
+			return; //no negative width or height allowed so we return
+		}
+		BufferedImage subImage = image.getSubimage(startX, startY, endX-startX, endY-startY);
+		BufferedImage croppedImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = croppedImage.createGraphics();
+		g.drawImage(subImage, startX, startY, null);
+		
+		this.image = croppedImage;
+		fireImageChangedEvent(croppedImage);
 	}
 	/**
 	 * Adds {@link ImageListener} to this model

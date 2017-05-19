@@ -28,7 +28,7 @@ public class ImageEvent extends EventObject{
 	/**
 	 * Returns Image held by the event
 	 * @return
-	 * 		The new Image
+	 * 		The new Image possibly null
 	 */
 	public BufferedImage getChangedImage() {
 		return image;

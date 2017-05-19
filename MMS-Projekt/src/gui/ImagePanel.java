@@ -2,29 +2,25 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
 
 import imageModel.ImageEvent;
 import imageModel.ImageListener;
 import imageModel.ImageModel;
+import tools.Tool;
 
 
 /**
  * The view to the underlying ImageModel
  * Takes care of displaying the image in the frame
- * Also uses a scrollbar if image should be to big
  * Extends {@link JPanel}
  * @author Tom
  *
@@ -33,6 +29,7 @@ import imageModel.ImageModel;
 public class ImagePanel extends JPanel {
 	
 	private final ImageModel model;
+	private Tool selectedTool;
 	
 	/**
 	 * Constructor for this Panel
@@ -41,20 +38,23 @@ public class ImagePanel extends JPanel {
 	 */
 	public ImagePanel(ImageModel model) {
 		this.model = model;
-		
+		this.selectedTool = null;
+		addMouseListener(mouseHandler);
+		addMouseMotionListener(mouseHandler);
 		model.addImageListener(new ImageListener() {
 
 			@Override
 			public void imageChanged(ImageEvent event) {
+				BufferedImage image = event.getChangedImage();
+				if(image != null) {
+					setPreferredSize(new Dimension(image.getWidth(), image.getHeight()));
+					revalidate();
+				}
 				repaint();	//if image is changed repaint the image
 			}
 		});
 	}
 	
-	@Override
-	public Dimension getPreferredSize() {
-		return getSize();
-	}
 	
 	@Override
 	public Dimension getMinimumSize() {
@@ -76,7 +76,68 @@ public class ImagePanel extends JPanel {
         if(model.getImage() != null) {
 	        g2d.drawImage(model.getImage(), null, 0, 0);
         }
+        
+        if(selectedTool != null) {
+        	selectedTool.draw(g2d);
+        }
+	}
+
+	/**
+	 * Set the tool of this image panel
+	 * Uses the selected tool as mouselistener for this imagepanel
+	 * @param selectedTool
+	 * 			{@link Tool} to be selected
+	 */
+	public void setSelectedTool(Tool selectedTool) {
+		this.selectedTool = selectedTool;
 	}
 	
+	
+	/**
+	 * MouseEventHandler for this Panel
+	 * Uses the currently selected Tool to handle events
+	 */
+	private MouseAdapter mouseHandler = new MouseAdapter() {
+
+		@Override
+		public void mouseClicked(MouseEvent me) {
+			if (selectedTool != null) {
+				selectedTool.mouseClicked(me);
+			}
+			repaint();
+		}
+		
+		@Override
+		public void mousePressed(MouseEvent me) {
+			if (selectedTool != null) {
+				selectedTool.mousePressed(me);
+			}
+			repaint();
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent me) {
+			if (selectedTool != null) {
+				selectedTool.mouseReleased(me);
+			}
+			repaint();
+		}
+
+		@Override
+		public void mouseDragged(MouseEvent me) {
+			if (selectedTool != null) {
+				selectedTool.mouseDragged(me);
+			}
+			repaint();
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent me) {
+			if (selectedTool != null) {
+				selectedTool.mouseEntered(me);
+			}
+			repaint();
+		}
+	};
 	
 }
