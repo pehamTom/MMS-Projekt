@@ -3,7 +3,7 @@ package filters;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 
-import pixels.Pixel;
+import pixels.RGBAPixel;
 
 /**
  * Filter out blue and green parts of image
@@ -21,7 +21,7 @@ public class ExtractRedFilter implements FilterInterface {
 		
 		for(int x = 0; x < img.getWidth(); x++) {
 			for(int y = 0; y < img.getHeight(); y++) {
-				redImg.setRGB(x, y, Pixel.generateRGBAPixel(Pixel.getRed(img.getRGB(x, y)), 0, 0, 255));
+				redImg.setRGB(x, y, RGBAPixel.generateRGBAPixel(RGBAPixel.getRed(img.getRGB(x, y)), 0, 0, 255));
 			}
 		}
 		return redImg;

@@ -233,9 +233,9 @@ public class ImageModel {
 			return; //no negative width or height allowed so we return
 		}
 		BufferedImage subImage = image.getSubimage(startX, startY, endX-startX, endY-startY);
-		BufferedImage croppedImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+		BufferedImage croppedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = croppedImage.createGraphics();
-		g.drawImage(subImage, startX, startY, null);
+		g.drawImage(subImage, 0, 0, null);
 		
 		this.image = croppedImage;
 		fireImageChangedEvent(croppedImage);

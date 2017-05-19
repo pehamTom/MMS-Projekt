@@ -96,6 +96,7 @@ public class Window extends JFrame{
         filterMenu.add(createFilterMenuItem(new SepiaFilter()));
         filterMenu.add(createFilterMenuItem(new FlipeVerticalFilter()));
         filterMenu.add(createFilterMenuItem(new StrangePatternEffect()));
+        filterMenu.add(createFilterMenuItem(new WashedOutColorsEffect()));
         
         final JButton undo = new JButton("Undo");
         undo.addMouseListener(new MouseAdapter() {

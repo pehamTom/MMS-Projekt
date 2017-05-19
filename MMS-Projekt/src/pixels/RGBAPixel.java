@@ -4,7 +4,7 @@ import java.awt.image.ColorModel;
 import java.awt.image.DirectColorModel;
 
 /** Represent a single Pixel */
-public class Pixel {
+public class RGBAPixel {
 	
 	private int rawRGBA;
 	
@@ -17,7 +17,7 @@ public class Pixel {
 	 * Initialize with a raw RGB value
 	 * @param rawRBGA
 	 */
-	public Pixel(int rawRGBA) {
+	public RGBAPixel(int rawRGBA) {
 		setRawRGBA(rawRGBA);
 	}
 	
@@ -28,7 +28,7 @@ public class Pixel {
 	 * @param b
 	 * @param alpha
 	 */
-	public Pixel(int r, int g, int b, int alpha) {
+	public RGBAPixel(int r, int g, int b, int alpha) {
 		this.r = r;
 		this.g = g;
 		this.b = b;
@@ -43,7 +43,7 @@ public class Pixel {
 	 * @param cb
 	 * @param cr
 	 */
-	public Pixel(int y, int cb, int cr) {
+	public RGBAPixel(int y, int cb, int cr) {
 		this.y = y;
 		this.cb = cb;
 		this.cr = cr;
@@ -51,6 +51,65 @@ public class Pixel {
 		updateRawFromRGB();
 	}
 
+	public RGBAPixel(HSVPixel hsv) {
+		double h = hsv.getH();
+		double s = hsv.getS();
+		double v = hsv.getV();
+		
+		h /= 60.0;
+		int i = (int) h;
+		double f = h - i;
+		double p = v * (1.0 - s);
+		double q = v *(1.0 - (s*f));
+		double t = v *(1.0 - (s * (1.0-f)));
+		
+		int intP = mapToRGBRange(p);
+		int intQ = mapToRGBRange(q);
+		int intV = mapToRGBRange(v);
+		int intT = mapToRGBRange(t);
+		
+		switch(i) {
+		case 0: {
+			r = intP;
+			g = intQ;
+			b = intV;
+		} break;
+		
+		case 1: {
+			r = intQ;
+			g = intV;
+			b = intP;
+		} break;
+		
+		case 2: {
+			r = intP;
+			g = intV;
+			b = intT;
+		} break;
+		
+		case 3: {
+			r = intP;
+			g = intQ;
+			b = intV;
+		} break;
+		
+		case 4: {
+			r = intP;
+			g = intQ;
+			b = intV;
+		} break;
+		
+		default: {
+			r = intV;
+			g = intP;
+			b = intQ;
+		} break;
+		}
+		alpha = 255;
+		this.alpha = 255;
+		updateRawFromRGB();
+		updateYCbCrFromRGB();
+	}
 	/** One color model per JVM is enough */
 	private static DirectColorModel colorModel = null;
 	
@@ -97,10 +156,10 @@ public class Pixel {
 	
 	/** Create single rgb values form a raw int */
 	private void updateRGBFromInt() {
-		r = Pixel.getRed(rawRGBA);
-		g = Pixel.getGreen(rawRGBA);
-		b = Pixel.getBlue(rawRGBA);
-		alpha = Pixel.getAlpha(rawRGBA);
+		r = RGBAPixel.getRed(rawRGBA);
+		g = RGBAPixel.getGreen(rawRGBA);
+		b = RGBAPixel.getBlue(rawRGBA);
+		alpha = RGBAPixel.getAlpha(rawRGBA);
 	}
 	
 	/** Generate YCbCr values from rgb
@@ -226,7 +285,18 @@ public class Pixel {
 	}
 
 	public static void setColorModel(DirectColorModel colorModel) {
-		Pixel.colorModel = colorModel;
+		RGBAPixel.colorModel = colorModel;
+	}
+	
+	/**
+	 * Maps a value in the interval [0,1] to [0,255]
+	 * @param val
+	 * 			value in the interval [0,1]
+	 * @return
+	 * 		int value in [0,255]
+	 */
+	private int mapToRGBRange(double val) {
+		return (int)(val*255);
 	}
 	
 	@Override
@@ -250,5 +320,4 @@ public class Pixel {
 		
 		return buffer.toString();
 	}
-
 }

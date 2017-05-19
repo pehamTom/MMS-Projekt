@@ -3,7 +3,7 @@ package filters;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 
-import pixels.Pixel;
+import pixels.RGBAPixel;
 
 /**
  * Reduce image to grey image
@@ -21,8 +21,8 @@ public class GreyScaleFilter implements FilterInterface{
 		for(int y = 0; y < filteredImg.getHeight(); y++) {
 			for(int x = 0; x < filteredImg.getWidth(); x++) {
 				int rgba = image.getRGB(x, y);
-				int grey = (Pixel.getBlue(rgba) + Pixel.getGreen(rgba) + Pixel.getRed(rgba)) / 3;
-				grey = Pixel.generateRGBAPixel(grey, grey, grey, 255);
+				int grey = (RGBAPixel.getBlue(rgba) + RGBAPixel.getGreen(rgba) + RGBAPixel.getRed(rgba)) / 3;
+				grey = RGBAPixel.generateRGBAPixel(grey, grey, grey, 255);
 				filteredImg.setRGB(x, y, grey);
 			}
 		}

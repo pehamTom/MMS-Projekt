@@ -3,7 +3,7 @@ package filters;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 
-import pixels.Pixel;
+import pixels.RGBAPixel;
 
 /**
  * Display sepia colored image
@@ -25,15 +25,15 @@ public class SepiaFilter implements FilterInterface{
 				int rgba = image.getRGB(x, y);
 				
 				//coefficients are taken from lecture slides
-				int sepiaRed = (int) (Pixel.getBlue(rgba) * 0.189 + Pixel.getGreen(rgba) * 0.769 + Pixel.getRed(rgba) * 0.393);
-				int sepiaGreen = (int) (Pixel.getBlue(rgba) * 0.168 + Pixel.getGreen(rgba) * 0.686  + Pixel.getRed(rgba) * 0.349);
-				int sepiaBlue = (int) (Pixel.getBlue(rgba) * 0.131 + Pixel.getGreen(rgba) * 0.534 + Pixel.getRed(rgba) * 0.272);
+				int sepiaRed = (int) (RGBAPixel.getBlue(rgba) * 0.189 + RGBAPixel.getGreen(rgba) * 0.769 + RGBAPixel.getRed(rgba) * 0.393);
+				int sepiaGreen = (int) (RGBAPixel.getBlue(rgba) * 0.168 + RGBAPixel.getGreen(rgba) * 0.686  + RGBAPixel.getRed(rgba) * 0.349);
+				int sepiaBlue = (int) (RGBAPixel.getBlue(rgba) * 0.131 + RGBAPixel.getGreen(rgba) * 0.534 + RGBAPixel.getRed(rgba) * 0.272);
 				
 				//rgb values might exceed byte-range, so they need to be adjusted
 				sepiaRed = sepiaRed > 255 ? 255 : sepiaRed;
 				sepiaGreen = sepiaGreen > 255 ? 255 : sepiaGreen;
 				sepiaBlue = sepiaBlue > 255 ? 255 : sepiaBlue;
-				filteredImg.setRGB(x, y, Pixel.generateRGBAPixel(sepiaRed, sepiaGreen, sepiaBlue, 255));
+				filteredImg.setRGB(x, y, RGBAPixel.generateRGBAPixel(sepiaRed, sepiaGreen, sepiaBlue, 255));
 			}
 		}
 		return filteredImg;	 

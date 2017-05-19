@@ -3,7 +3,7 @@ package filters;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 
-import pixels.Pixel;
+import pixels.RGBAPixel;
 
 public class StrangePatternEffect implements FilterInterface {
 
@@ -19,10 +19,10 @@ public class StrangePatternEffect implements FilterInterface {
 						if(i+x < img.getWidth() && j+y < img.getHeight()) {
 							double factor = pattern[i][j];
 							int rgb = img.getRGB(x+i, y+j);
-							int red = (int) (Pixel.getRed(rgb)*factor);
-							int blue = (int) (Pixel.getBlue(rgb)*factor);
-							int green = (int) (Pixel.getGreen(rgb)*factor);
-							int newRGB = Pixel.generateRGBAPixel(red, green, blue, 255);
+							int red = (int) (RGBAPixel.getRed(rgb)*factor);
+							int blue = (int) (RGBAPixel.getBlue(rgb)*factor);
+							int green = (int) (RGBAPixel.getGreen(rgb)*factor);
+							int newRGB = RGBAPixel.generateRGBAPixel(red, green, blue, 255);
 							dottedImage.setRGB(x+i, y+j, newRGB);
 						}
 					}
