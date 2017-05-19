@@ -198,10 +198,47 @@ public class ImageModel {
 		fireImageChangedEvent(addedText); //signify listeners of change
 	}
 	
+	/**
+	 * Apply filter to the models image
+	 * @param filter
+	 * 			Filter to be applied to the image
+	 */
 	public void applyFilter(FilterInterface filter) {
 		BufferedImage filteredImage = (BufferedImage) filter.runFilter(image);
 		this.image = filteredImage;
 		fireImageChangedEvent(filteredImage);
+	}
+	
+	/**
+	 * Crop Image
+	 * @param startX
+	 * 		x-coordinate from where to start the crop
+	 * @param startY
+	 * 		y-coordinate from where to start the crop
+	 * @param endX
+	 * 		x-coordinate to crop to
+	 * @param endY
+	 * 		y-coordinate to crop to
+	 */
+	public void cropImage(int startX, int startY, int endX, int endY) {
+		//if coordinates are out of bound, just set them to the edge of the image
+		startX = startX < x ? x : startX;
+		startY = startY < y ? y : startY;
+		endX = endX > x+getWidth() ? x+getWidth() : endX;
+		endY = endY > y+getHeight() ? y+getHeight() : endY;
+		int width = endX-startX;
+		int height = endY-startY;
+		
+		if(width <= 0 || height <= 0) {
+			return; //no negative width or height allowed so we return
+		}
+		BufferedImage subImage = image.getSubimage(startX, startY, endX-startX, endY-startY);
+		BufferedImage croppedImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = croppedImage.createGraphics();
+		g.drawImage(subImage, startX, startY, null);
+		
+		this.image = croppedImage;
+		fireImageChangedEvent(croppedImage);
 	}
 	/**
 	 * Adds {@link ImageListener} to this model

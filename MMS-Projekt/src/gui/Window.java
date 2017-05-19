@@ -13,6 +13,8 @@ import filters.*;
 import imageModel.ImageEvent;
 import imageModel.ImageListener;
 import imageModel.ImageModel;
+import tools.AddTextTool;
+import tools.CropTool;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -91,6 +93,9 @@ public class Window extends JFrame{
         filterMenu.add(createFilterMenuItem(new ExtractRedFilter()));
         filterMenu.add(createFilterMenuItem(new ExtractGreenFilter()));
         filterMenu.add(createFilterMenuItem(new NegativeFilter()));
+        filterMenu.add(createFilterMenuItem(new SepiaFilter()));
+        filterMenu.add(createFilterMenuItem(new FlipeVerticalFilter()));
+        filterMenu.add(createFilterMenuItem(new StrangePatternEffect()));
         
         final JButton undo = new JButton("Undo");
         undo.addMouseListener(new MouseAdapter() {
@@ -117,9 +122,11 @@ public class Window extends JFrame{
 
         editMenu.add(rotateAction);
         editMenu.add(resizeAction);
+        editMenu.add(new CropTool(imagePanel, model));
+        editMenu.add(new AddTextTool(imagePanel, model));
         
         
-        //configure imagePanel
+        /*//configure imagePanel
         imagePanel.addMouseListener(new MouseAdapter() {
 		@Override
 		public void mouseClicked(MouseEvent e) {
@@ -129,7 +136,7 @@ public class Window extends JFrame{
 			toolPopupLocation = new Dimension(e.getX(), e.getY());
 			toolsPopup.show(e.getComponent(), e.getX(), e.getY());
 			}
-		});
+		});*/
         
         getContentPane().add(menuBar, BorderLayout.NORTH);
         getContentPane().add(scrollPane, BorderLayout.CENTER);
@@ -265,7 +272,8 @@ public class Window extends JFrame{
     /**
      * Handle user input to resize image
      */
-    private Action resizeAction = new AbstractAction("Resize") {
+    @SuppressWarnings("serial")
+	private Action resizeAction = new AbstractAction("Resize") {
     	
     	@Override
     	public void actionPerformed(ActionEvent e) {
@@ -274,5 +282,14 @@ public class Window extends JFrame{
     		int newWidth = (int) (model.getWidth() * percent);
     		CommandHandler.getInstance().doCommand(new ResizeImageCommand(model, newWidth, newHeight));
     	}
+    };
+    
+    private Action cropAction = new AbstractAction("Crop") {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
     };
 }
