@@ -15,6 +15,9 @@ public class RotateImageCommand extends ImageCommand {
 
 	@Override
 	public void doCommand() {
+		if(model.getImage() == null) {
+			return;
+		}
 		model.rotateImage();
 	}
 

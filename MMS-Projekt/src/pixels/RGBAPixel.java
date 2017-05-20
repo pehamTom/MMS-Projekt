@@ -70,9 +70,9 @@ public class RGBAPixel {
 		
 		switch(i) {
 		case 0: {
-			r = intP;
-			g = intQ;
-			b = intV;
+			r = intV;
+			g = intT;
+			b = intP;
 		} break;
 		
 		case 1: {
@@ -94,8 +94,8 @@ public class RGBAPixel {
 		} break;
 		
 		case 4: {
-			r = intP;
-			g = intQ;
+			r = intT;
+			g = intP;
 			b = intV;
 		} break;
 		
@@ -105,7 +105,6 @@ public class RGBAPixel {
 			b = intQ;
 		} break;
 		}
-		alpha = 255;
 		this.alpha = 255;
 		updateRawFromRGB();
 		updateYCbCrFromRGB();

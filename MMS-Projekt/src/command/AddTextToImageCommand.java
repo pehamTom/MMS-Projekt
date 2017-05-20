@@ -39,8 +39,14 @@ public class AddTextToImageCommand extends ImageCommand {
 		this.color = color;
 	}
 
+	/**
+	 * Add text to image
+	 */
 	@Override
 	public void doCommand() {
+		if(model.getImage() == null) {
+			return;
+		}
 		model.addText(text, x, y, size, color);
 	}
 

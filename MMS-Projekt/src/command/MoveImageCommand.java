@@ -29,6 +29,9 @@ public class MoveImageCommand extends ImageCommand{
 
 	@Override
 	public void doCommand() {
+		if(model.getImage() == null) {
+			return;
+		}
 		model.moveImage(x, y);
 	}
 

@@ -28,6 +28,9 @@ public class ResizeImageCommand extends ImageCommand {
 
 	@Override
 	public void doCommand() {
+		if(model.getImage() == null) {
+			return;
+		}
 		model.resizeImage(width, height);
 	}
 

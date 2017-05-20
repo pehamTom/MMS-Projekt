@@ -18,6 +18,7 @@ import tools.CropTool;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -67,23 +68,25 @@ public class Window extends JFrame{
         //Create popup menus
 		final JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
+		
 		final JMenu fileMenu = new JMenu("File");
-		menuBar.add(fileMenu);
 		final JMenu filterMenu = new JMenu ("Filter");
-		menuBar.add(filterMenu);
 		final JMenu editMenu = new JMenu("Edit");
+		final JMenu undoRedoMenu = new JMenu("Undo/Redo");
+
+		menuBar.add(fileMenu);
+		menuBar.add(filterMenu);
 		menuBar.add(editMenu);
-        final JPopupMenu toolsPopup = new JPopupMenu("Tools");	//shows up when user right clicks the image
+		menuBar.add(undoRedoMenu);
         
 		final ImagePanel imagePanel = new ImagePanel(model);
         final JScrollPane scrollPane = new JScrollPane(imagePanel);	//image might be too big, so we need a scrollbar to edit the image properl<
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);	//always show scrollbar
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);		//always show scrollbar
         
+        //set up file menu
         fileMenu.add(loadAction);
         fileMenu.add(saveAction);
-
-        toolsPopup.add(addTextAction);
         
         //===========================================================
         //TODO: ADD YOUR FILTERS HERE! EXAMPLE BELOW
@@ -92,55 +95,26 @@ public class Window extends JFrame{
         filterMenu.add(createFilterMenuItem(new ExtractBlueFilter()));
         filterMenu.add(createFilterMenuItem(new ExtractRedFilter()));
         filterMenu.add(createFilterMenuItem(new ExtractGreenFilter()));
+        filterMenu.add(createFilterMenuItem(new FilterBlue()));
+        filterMenu.add(createFilterMenuItem(new FilterRed()));
+        filterMenu.add(createFilterMenuItem(new FilterGreen()));
         filterMenu.add(createFilterMenuItem(new NegativeFilter()));
         filterMenu.add(createFilterMenuItem(new SepiaFilter()));
         filterMenu.add(createFilterMenuItem(new FlipVerticallyFilter()));
         filterMenu.add(createFilterMenuItem(new StrangePatternEffect()));
         filterMenu.add(createFilterMenuItem(new WashedOutColorsEffect()));
         filterMenu.add(createFilterMenuItem(new FlipHorizontallyFilter()));
-        filterMenu.add(createFilterMenuItem(new QuadrantFlipEffect()));
-        
-        final JButton undo = new JButton("Undo");
-        undo.addMouseListener(new MouseAdapter() {
+        filterMenu.add(new QuadrantFlipEffect(imagePanel, model));
 
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				super.mouseClicked(e);
-				CommandHandler.getInstance().undoCommand();
-			}
-        	
-		});
-        menuBar.add(undo);
-        
-        final JButton redo = new JButton("Redo");
-        redo.addMouseListener(new MouseAdapter() {
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				super.mouseClicked(e);
-				CommandHandler.getInstance().redoCommand();
-			}
-		});
-        menuBar.add(redo);
-
+        //Set up edit menu
         editMenu.add(rotateAction);
         editMenu.add(resizeAction);
         editMenu.add(new CropTool(imagePanel, model));
         editMenu.add(new AddTextTool(imagePanel, model));
         
-        
-        /*//configure imagePanel
-        imagePanel.addMouseListener(new MouseAdapter() {
-		@Override
-		public void mouseClicked(MouseEvent e) {
-			super.mouseClicked(e);
-			if(e.getButton() != 3) 
-				return; //if user clicked something else than the right mouse button return
-			toolPopupLocation = new Dimension(e.getX(), e.getY());
-			toolsPopup.show(e.getComponent(), e.getX(), e.getY());
-			}
-		});*/
-        
+        undoRedoMenu.add(undoAction);
+        undoRedoMenu.add(redoAction);
+        		
         getContentPane().add(menuBar, BorderLayout.NORTH);
         getContentPane().add(scrollPane, BorderLayout.CENTER);
         pack();
@@ -182,6 +156,10 @@ public class Window extends JFrame{
 	 */
 	@SuppressWarnings("serial")
 	private Action loadAction = new AbstractAction("Load") {
+		{
+    		putValue(Action.ACCELERATOR_KEY,
+    				KeyStroke.getKeyStroke(KeyEvent.VK_L, KeyEvent.CTRL_MASK));	
+    	}
         public void actionPerformed(ActionEvent e) {
 			JFileChooser fc = new JFileChooser();
 			fc.setCurrentDirectory(currentWorkingDirectory);
@@ -213,6 +191,10 @@ public class Window extends JFrame{
 	 */
 	@SuppressWarnings("serial")
 	private Action saveAction = new AbstractAction("Save") {
+		{
+    		putValue(Action.ACCELERATOR_KEY,
+    				KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK));	
+    	}
         public void actionPerformed(ActionEvent e) {
         	JFileChooser fc = new JFileChooser();
         	fc.setCurrentDirectory(currentWorkingDirectory);
@@ -231,7 +213,8 @@ public class Window extends JFrame{
 			if(fc.showSaveDialog(thisFrame) == JFileChooser.APPROVE_OPTION && isValidExtension(fc.getSelectedFile().toString())) {
 				String fileName = fc.getSelectedFile().toString();
 				try {
-					ImageIO.write(model.getImage(), fileName.substring(fileName.lastIndexOf('.')+1), new FileOutputStream(fc.getSelectedFile())); //if user entered valid extension, writes file
+					if(model.getImage() != null)
+						ImageIO.write(model.getImage(), fileName.substring(fileName.lastIndexOf('.')+1), new FileOutputStream(fc.getSelectedFile())); //if user entered valid extension, writes file
 				} catch (FileNotFoundException exception) {
 					JOptionPane.showMessageDialog(thisFrame, exception.getMessage());
 				} catch (IOException exception) {
@@ -240,32 +223,16 @@ public class Window extends JFrame{
 			}
         }
 	};
-	
-	/**
-	 * Add text to image
-	 */
-	@SuppressWarnings("serial")
-	private Action addTextAction = new AbstractAction("Add Text") {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			String text = input.getString("Type text here");
-			int size = input.getInt("Type size of text to be displayed");
-			Color color = input.getColor("Select Color");
-			CommandHandler.getInstance().doCommand(new AddTextToImageCommand(model, text, 
-					(int)toolPopupLocation.getWidth(), 
-					(int)toolPopupLocation.getHeight(), 
-					size, color));
-		}
-    	
-    };
     
     /**
      * Rotate image by 90° clockwise
      */
     @SuppressWarnings("serial")
 	private Action rotateAction = new AbstractAction("Rotate") {
-    	
+    	{
+    		putValue(Action.ACCELERATOR_KEY,
+    				KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.CTRL_MASK));	
+    	}
     	@Override
     	public void actionPerformed(ActionEvent e) {
     		CommandHandler.getInstance().doCommand(new RotateImageCommand(model));
@@ -287,12 +254,33 @@ public class Window extends JFrame{
     	}
     };
     
-    private Action cropAction = new AbstractAction("Crop") {
-
+    /**
+     * Handle user input to undo last performed action
+     */
+    @SuppressWarnings("serial")
+	private Action undoAction = new AbstractAction("Undo") {
+    	{
+    		putValue(Action.ACCELERATOR_KEY,
+    				KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.CTRL_MASK));	
+    	}
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-			
+			CommandHandler.getInstance().undoCommand();
+		}
+    };
+    
+    /**
+     * Handle user intput to redo last undone action
+     */
+    @SuppressWarnings("serial")
+	private Action redoAction = new AbstractAction("Redo") {
+    	{
+    		putValue(Action.ACCELERATOR_KEY,
+    				KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.CTRL_MASK));	
+    	}
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			CommandHandler.getInstance().redoCommand();
 		}
     };
 }

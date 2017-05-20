@@ -29,6 +29,9 @@ public class RunFilterCommand extends ImageCommand {
 	 */
 	@Override
 	public void doCommand() {
+		if(model.getImage() == null) {
+			return;
+		}
 		model.applyFilter(filter);
 	}
 

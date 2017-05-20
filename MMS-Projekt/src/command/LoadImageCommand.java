@@ -30,6 +30,9 @@ public class LoadImageCommand extends ImageCommand {
 	 */
 	@Override
 	public void doCommand() {
+		if(imageToLoad == null) {
+			return;
+		}
 		model.loadImage(imageToLoad, 0, 0);
 	}
 	

@@ -89,6 +89,13 @@ public class ImagePanel extends JPanel {
 		this.selectedTool = selectedTool;
 	}
 	
+	/**
+	 * Removes currently used tool
+	 */
+	public void removeSelectedTool() {
+		this.selectedTool = null;
+	}
+	
 	
 	/**
 	 * MouseEventHandler for this Panel
