@@ -98,7 +98,7 @@ public class Window extends JFrame{
         filterMenu.add(createFilterMenuItem(new StrangePatternEffect()));
         filterMenu.add(createFilterMenuItem(new WashedOutColorsEffect()));
         filterMenu.add(createFilterMenuItem(new FlipHorizontallyFilter()));
-        filterMenu.add(createFilterMenuItem(new QuadrantFlipEffect()));
+        filterMenu.add(new QuadrantFlipEffect(imagePanel, model));
         
         final JButton undo = new JButton("Undo");
         undo.addMouseListener(new MouseAdapter() {
