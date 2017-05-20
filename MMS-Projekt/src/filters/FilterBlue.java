@@ -6,14 +6,14 @@ import java.awt.image.BufferedImage;
 import pixels.RGBAPixel;
 
 /**
- * Filter out red and blue parts of image
+ * Filter out blue parts of image
  * @author Tom
  *
  */
-public class ExtractGreenFilter implements FilterInterface {
+public class FilterBlue implements FilterInterface {
 
 	/**
-	 * Filter out red and blue parts of image
+	 * Filter out blue parts of image
 	 */
 	@Override
 	public Image runFilter(BufferedImage img) {
@@ -21,7 +21,7 @@ public class ExtractGreenFilter implements FilterInterface {
 		
 		for(int x = 0; x < img.getWidth(); x++) {
 			for(int y = 0; y < img.getHeight(); y++) {
-				greenImg.setRGB(x, y, RGBAPixel.generateRGBAPixel(0, RGBAPixel.getGreen(img.getRGB(x, y)), 0, 255));
+				greenImg.setRGB(x, y, RGBAPixel.generateRGBAPixel(RGBAPixel.getRed(img.getRGB(x, y)), RGBAPixel.getGreen(img.getRGB(x, y)), 0, 255));
 			}
 		}
 		return greenImg;
@@ -29,7 +29,7 @@ public class ExtractGreenFilter implements FilterInterface {
 	
 	@Override
 	public String toString() {
-		return "Extract Green";
+		return "Filter Blue";
 	}
 
 }

@@ -15,7 +15,13 @@ import pixels.RGBAPixel;
  */
 public class WashedOutColorsEffect implements FilterInterface {
 
-	private static final double FACTOR = 0.6; 
+	private static final double FACTOR = 0.6;
+	
+	/**
+	 * Transforms rgb value of pixel into HSV color space. 
+	 * Then changes the Saturation to make the image look 
+	 * like it has less lively colors.
+	 */
 	@Override
 	public Image runFilter(BufferedImage img) {
 		BufferedImage washedOut = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
@@ -30,10 +36,6 @@ public class WashedOutColorsEffect implements FilterInterface {
 			}
 		}
 		return washedOut;
-	}
-
-	private int putInRGBRange(int val) {
-		return val > 255 ? 255 : val;
 	}
 	
 	@Override 

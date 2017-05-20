@@ -9,6 +9,15 @@ public class HSVPixel {
 
 	private double h, s, v;
 	
+	/**
+	 * Generate Pixel in the HSV Color Space from RGB Value. 
+	 * Works with flaoting point numbers, which is more precise
+	 *  of course slower. But the author thinks that the benefits 
+	 *  outweigh the costs.
+	 * @param red
+	 * @param green
+	 * @param blue
+	 */
 	public HSVPixel(int red, int green, int blue) {
 		double min, max, delta;
 		double r,g,b;

@@ -16,6 +16,9 @@ public class CropImageCommand extends ImageCommand {
 
 	@Override
 	public void doCommand() {
+		if(model.getImage() == null) {
+			return;
+		}
 		model.cropImage(startX, startY, endX, endY);
 	}
 

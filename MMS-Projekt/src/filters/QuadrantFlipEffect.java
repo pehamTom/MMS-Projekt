@@ -1,5 +1,6 @@
 package filters;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -62,8 +63,6 @@ public class QuadrantFlipEffect extends Tool implements FilterInterface {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		super.actionPerformed(e);
-		InputHandler input = new InputHandler(parent);
-		input.showMessage("Click on Quadrant of image to apply quadrant flip to");
 	}
 
 	@Override
@@ -92,6 +91,10 @@ public class QuadrantFlipEffect extends Tool implements FilterInterface {
 
 	@Override
 	public void draw(Graphics g) {
-		//This tool doesn't need anything drawn	
+		Color prev = g.getColor();
+		g.setColor(Color.BLACK);
+		g.drawLine(model.getWidth()/2, 0, model.getWidth()/2, model.getHeight());
+		g.drawLine(0, model.getHeight()/2, model.getWidth(), model.getHeight()/2);
+		g.setColor(prev);
 	}
 }
