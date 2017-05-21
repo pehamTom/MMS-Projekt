@@ -76,6 +76,7 @@ public class CropTool extends Tool {
 		CommandHandler.getInstance().doCommand(new CropImageCommand(model, (int)startPoint.getX(), (int)startPoint.getY(), 
 																	(int)endPoint.getX(), (int)endPoint.getY()));
 		state = State.IDLE;
+		parent.removeSelectedTool();
 	}
 
 	/**

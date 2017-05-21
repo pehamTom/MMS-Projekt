@@ -7,20 +7,21 @@ import pixels.HSVPixel;
 import pixels.RGBAPixel;
 
 /**
- * Creates the effect of an image having "washed out colors"
- * Works well on panoramas
- * Doesn't look too good on images of faces
+ * Set Saturation of image
  * @author Tom
  *
  */
-public class WashedOutColorsEffect implements FilterInterface {
+public class SetSaturation implements FilterInterface {
 
-	private static final double FACTOR = 0.6;
+	private final double factor;
+	public SetSaturation(int factor) {
+		this.factor = factor/100.0;
+	}
 	
 	/**
 	 * Transforms rgb value of pixel into HSV color space. 
-	 * Then changes the Saturation to make the image look 
-	 * like it has less lively colors.
+	 * Then multiplies saturation with factor
+	 * Then creates new image out of calculated rgb values
 	 */
 	@Override
 	public Image runFilter(BufferedImage img) {
@@ -30,7 +31,7 @@ public class WashedOutColorsEffect implements FilterInterface {
 			for(int y = 0; y < img.getHeight(); y++) {
 				int rgb = img.getRGB(x, y);
 				HSVPixel hsvPix = new HSVPixel(rgb);
-				hsvPix.setS(hsvPix.getS() * FACTOR);
+				hsvPix.setS(hsvPix.getS() * factor);
 				RGBAPixel rgbPix = new RGBAPixel(hsvPix);
 				washedOut.setRGB(x, y, rgbPix.getRawRGBA());
 			}
@@ -40,6 +41,6 @@ public class WashedOutColorsEffect implements FilterInterface {
 	
 	@Override 
 	public String toString() {
-		return "Washed Out Effect";
+		return "Set Saturation";
 	}
 }
