@@ -1,6 +1,5 @@
 package tools;
 
-import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
@@ -17,6 +16,7 @@ import imageModel.ImageModel;
  * @author Tom
  *
  */
+@SuppressWarnings("serial")
 public abstract class Tool extends AbstractAction implements MouseListener, MouseMotionListener {
 
 	protected final ImageModel model;

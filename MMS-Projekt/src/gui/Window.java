@@ -97,6 +97,7 @@ public class Window extends JFrame{
         filterMenu.add(createFilterMenuItem(new StrangePatternEffect()));
         filterMenu.add(createFilterMenuItem(new FlipHorizontallyFilter()));
         filterMenu.add(new QuadrantFlipEffect(imagePanel, model));
+       // filterMenu.add(createFilterMenuItem(new DarkPictureEffect()));
 
         //Set up edit menu
         editMenu.add(rotateAction);
@@ -116,7 +117,6 @@ public class Window extends JFrame{
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setVisible(true);
 	}
 	
 	/**

@@ -14,6 +14,12 @@ import pixels.RGBAPixel;
 public class SetSaturation implements FilterInterface {
 
 	private final double factor;
+	
+	/**
+	 * Constructor for this filter
+	 * @param factor
+	 * 			factor with which to multiply saturation
+	 */
 	public SetSaturation(int factor) {
 		this.factor = factor/100.0;
 	}
