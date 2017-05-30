@@ -15,6 +15,8 @@ import imageModel.ImageListener;
 import imageModel.ImageModel;
 import tools.AddTextTool;
 import tools.CropTool;
+import tools.MoveImageTool;
+import tools.Tool;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -46,7 +48,6 @@ public class Window extends JFrame{
 	private final InputHandler input;
 	private final JFrame thisFrame = this;
 
-    Dimension toolPopupLocation = null; //TODO: Think about better solution
     
 	public Window(String title) throws HeadlessException {
 		this(title, DEFAULT_WINDOW_DIMENSION);
@@ -97,13 +98,15 @@ public class Window extends JFrame{
         filterMenu.add(createFilterMenuItem(new StrangePatternEffect()));
         filterMenu.add(createFilterMenuItem(new FlipHorizontallyFilter()));
         filterMenu.add(new QuadrantFlipEffect(imagePanel, model));
-       // filterMenu.add(createFilterMenuItem(new DarkPictureEffect()));
 
         //Set up edit menu
         editMenu.add(rotateAction);
         editMenu.add(resizeAction);
         editMenu.add(new CropTool(imagePanel, model));
         editMenu.add(new AddTextTool(imagePanel, model));
+        Tool defaultPanelTool = new MoveImageTool(imagePanel, model);
+        imagePanel.setDefaultTool(defaultPanelTool);
+        editMenu.add(defaultPanelTool);
         editMenu.add(setSaturationAction);
         editMenu.add(setAmountBlueAction);
         editMenu.add(setAmountRedAction);
@@ -243,10 +246,14 @@ public class Window extends JFrame{
     	
     	@Override
     	public void actionPerformed(ActionEvent e) {
-    		double percent = input.getInt("Type percentage to resize image to")/100.0;
-    		int newHeight = (int) (model.getHeight() * percent);
-    		int newWidth = (int) (model.getWidth() * percent);
-    		CommandHandler.getInstance().doCommand(new ResizeImageCommand(model, newWidth, newHeight));
+    		try {
+    			double percent = input.getInt("Type percentage to resize image to")/100.0;
+        		int newHeight = (int) (model.getHeight() * percent);
+        		int newWidth = (int) (model.getWidth() * percent);
+        		CommandHandler.getInstance().doCommand(new ResizeImageCommand(model, newWidth, newHeight));
+    		} catch(NumberFormatException exep) {
+				return;
+			}
     	}
     };
     
@@ -288,8 +295,12 @@ public class Window extends JFrame{
     	
     	@Override
     	public void actionPerformed(ActionEvent e) {
-    		int saturation = input.getInt("Type factor to reduce saturation of image in %, values greater than 100% are allowed");
-    		CommandHandler.getInstance().doCommand(new RunFilterCommand(model, new SetSaturation(saturation)));
+    		try {
+    			int saturation = input.getInt("Type factor to reduce saturation of image in %, values greater than 100% are allowed");
+        		CommandHandler.getInstance().doCommand(new RunFilterCommand(model, new SetSaturation(saturation)));
+    		}catch(NumberFormatException exep) {
+				return;
+			}
     	}
     };
     
@@ -301,8 +312,12 @@ public class Window extends JFrame{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			int bluePercent = input.getInt("Type factor by which to increase/decrease amount of blue in %\n Values greater than 100% are allowed");
-			CommandHandler.getInstance().doCommand(new RunFilterCommand(model, new SetBlue(bluePercent)));
+			try {
+				int bluePercent = input.getInt("Type factor by which to increase/decrease amount of blue in %\n Values greater than 100% are allowed");
+				CommandHandler.getInstance().doCommand(new RunFilterCommand(model, new SetBlue(bluePercent)));
+			}catch(NumberFormatException exep) {
+				return;
+			}
 		}
     	
     };
@@ -315,8 +330,12 @@ public class Window extends JFrame{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			int bluePercent = input.getInt("Type factor by which to increase/decrease amount of red in %\n Values greater than 100% are allowed");
-			CommandHandler.getInstance().doCommand(new RunFilterCommand(model, new SetRed(bluePercent)));
+			try {
+				int bluePercent = input.getInt("Type factor by which to increase/decrease amount of red in %\n Values greater than 100% are allowed");
+				CommandHandler.getInstance().doCommand(new RunFilterCommand(model, new SetRed(bluePercent)));
+			}catch(NumberFormatException exep) {
+				return;
+			}
 		}
     	
     };
@@ -329,8 +348,12 @@ public class Window extends JFrame{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			int bluePercent = input.getInt("Type factor by which to increase/decrease amount of red in %\n Values greater than 100% are allowed");
-			CommandHandler.getInstance().doCommand(new RunFilterCommand(model, new SetGreen(bluePercent)));
+			try {
+				int bluePercent = input.getInt("Type factor by which to increase/decrease amount of red in %\n Values greater than 100% are allowed");
+				CommandHandler.getInstance().doCommand(new RunFilterCommand(model, new SetGreen(bluePercent)));
+			} catch(NumberFormatException exep) {
+				return;
+			}
 		}
     	
     };

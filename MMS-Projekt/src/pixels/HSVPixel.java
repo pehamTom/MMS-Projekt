@@ -40,13 +40,8 @@ public class HSVPixel {
 			return;
 		}
 		
-		if(max > 0.0) {
-			s = delta / max;
-		} else {
-			s = 0.0;
-			h = -1; //undefined
-			return;
-		}
+		s = max == 0 ? 0 : delta / max;
+		
 		if(r >= max) {
 			h = (g-b)/delta;
 		} else if(g >= max) {
