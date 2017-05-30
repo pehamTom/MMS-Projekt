@@ -1,11 +1,16 @@
 package imagingApp;
+import javax.swing.SwingUtilities;
+
 import gui.*;
 
 public class Main {
 
 	public static void main(String[] args) {
 	
-		Window window = new Window("Test");
+		SwingUtilities.invokeLater(Main::startApp);
 	}
 
+	private static void startApp() {
+		new Window("Image Editing").setVisible(true);
+	}
 }

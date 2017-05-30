@@ -15,6 +15,8 @@ import imageModel.ImageListener;
 import imageModel.ImageModel;
 import tools.AddTextTool;
 import tools.CropTool;
+import tools.MoveImageTool;
+import tools.Tool;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -46,7 +48,6 @@ public class Window extends JFrame{
 	private final InputHandler input;
 	private final JFrame thisFrame = this;
 
-    Dimension toolPopupLocation = null; //TODO: Think about better solution
     
 	public Window(String title) throws HeadlessException {
 		this(title, DEFAULT_WINDOW_DIMENSION);
@@ -61,7 +62,6 @@ public class Window extends JFrame{
 		init();
 	}
 	
-	@SuppressWarnings("serial")
 	private void init() {
 		setPreferredSize(DEFAULT_WINDOW_DIMENSION);
 		
@@ -73,7 +73,7 @@ public class Window extends JFrame{
 		final JMenu filterMenu = new JMenu ("Filter");
 		final JMenu editMenu = new JMenu("Edit");
 		final JMenu undoRedoMenu = new JMenu("Undo/Redo");
-
+		
 		menuBar.add(fileMenu);
 		menuBar.add(filterMenu);
 		menuBar.add(editMenu);
@@ -92,17 +92,10 @@ public class Window extends JFrame{
         //TODO: ADD YOUR FILTERS HERE! EXAMPLE BELOW
         //===========================================================
         filterMenu.add(createFilterMenuItem(new GreyScaleFilter()));
-        filterMenu.add(createFilterMenuItem(new ExtractBlueFilter()));
-        filterMenu.add(createFilterMenuItem(new ExtractRedFilter()));
-        filterMenu.add(createFilterMenuItem(new ExtractGreenFilter()));
-        filterMenu.add(createFilterMenuItem(new FilterBlue()));
-        filterMenu.add(createFilterMenuItem(new FilterRed()));
-        filterMenu.add(createFilterMenuItem(new FilterGreen()));
         filterMenu.add(createFilterMenuItem(new NegativeFilter()));
         filterMenu.add(createFilterMenuItem(new SepiaFilter()));
         filterMenu.add(createFilterMenuItem(new FlipVerticallyFilter()));
         filterMenu.add(createFilterMenuItem(new StrangePatternEffect()));
-        filterMenu.add(createFilterMenuItem(new WashedOutColorsEffect()));
         filterMenu.add(createFilterMenuItem(new FlipHorizontallyFilter()));
         filterMenu.add(new QuadrantFlipEffect(imagePanel, model));
 
@@ -111,6 +104,13 @@ public class Window extends JFrame{
         editMenu.add(resizeAction);
         editMenu.add(new CropTool(imagePanel, model));
         editMenu.add(new AddTextTool(imagePanel, model));
+        Tool defaultPanelTool = new MoveImageTool(imagePanel, model);
+        imagePanel.setDefaultTool(defaultPanelTool);
+        editMenu.add(defaultPanelTool);
+        editMenu.add(setSaturationAction);
+        editMenu.add(setAmountBlueAction);
+        editMenu.add(setAmountRedAction);
+        editMenu.add(setAmountGreenAction);
         
         undoRedoMenu.add(undoAction);
         undoRedoMenu.add(redoAction);
@@ -120,7 +120,6 @@ public class Window extends JFrame{
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setVisible(true);
 	}
 	
 	/**
@@ -247,10 +246,14 @@ public class Window extends JFrame{
     	
     	@Override
     	public void actionPerformed(ActionEvent e) {
-    		double percent = input.getInt("Type percentage to resize image to")/100.0;
-    		int newHeight = (int) (model.getHeight() * percent);
-    		int newWidth = (int) (model.getWidth() * percent);
-    		CommandHandler.getInstance().doCommand(new ResizeImageCommand(model, newWidth, newHeight));
+    		try {
+    			double percent = input.getInt("Type percentage to resize image to")/100.0;
+        		int newHeight = (int) (model.getHeight() * percent);
+        		int newWidth = (int) (model.getWidth() * percent);
+        		CommandHandler.getInstance().doCommand(new ResizeImageCommand(model, newWidth, newHeight));
+    		} catch(NumberFormatException exep) {
+				return;
+			}
     	}
     };
     
@@ -282,5 +285,76 @@ public class Window extends JFrame{
 		public void actionPerformed(ActionEvent e) {
 			CommandHandler.getInstance().redoCommand();
 		}
+    };
+    
+    /**
+     * Change saturation of image
+     */
+    @SuppressWarnings("serial")
+	private Action setSaturationAction = new AbstractAction("Set Saturation") {
+    	
+    	@Override
+    	public void actionPerformed(ActionEvent e) {
+    		try {
+    			int saturation = input.getInt("Type factor to reduce saturation of image in %, values greater than 100% are allowed");
+        		CommandHandler.getInstance().doCommand(new RunFilterCommand(model, new SetSaturation(saturation)));
+    		}catch(NumberFormatException exep) {
+				return;
+			}
+    	}
+    };
+    
+    /**
+     * Change amount of blue in picture
+     */
+    @SuppressWarnings("serial")
+	private Action setAmountBlueAction = new AbstractAction("Set Amount of Blue") {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			try {
+				int bluePercent = input.getInt("Type factor by which to increase/decrease amount of blue in %\n Values greater than 100% are allowed");
+				CommandHandler.getInstance().doCommand(new RunFilterCommand(model, new SetBlue(bluePercent)));
+			}catch(NumberFormatException exep) {
+				return;
+			}
+		}
+    	
+    };
+    
+    /**
+     * Change amount of blue in picture
+     */
+    @SuppressWarnings("serial")
+	private Action setAmountRedAction = new AbstractAction("Set Amount of Red") {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			try {
+				int bluePercent = input.getInt("Type factor by which to increase/decrease amount of red in %\n Values greater than 100% are allowed");
+				CommandHandler.getInstance().doCommand(new RunFilterCommand(model, new SetRed(bluePercent)));
+			}catch(NumberFormatException exep) {
+				return;
+			}
+		}
+    	
+    };
+    
+    /**
+     * Change amount of blue in picture
+     */
+    @SuppressWarnings("serial")
+	private Action setAmountGreenAction = new AbstractAction("Set Amount of Green") {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			try {
+				int bluePercent = input.getInt("Type factor by which to increase/decrease amount of red in %\n Values greater than 100% are allowed");
+				CommandHandler.getInstance().doCommand(new RunFilterCommand(model, new SetGreen(bluePercent)));
+			} catch(NumberFormatException exep) {
+				return;
+			}
+		}
+    	
     };
 }

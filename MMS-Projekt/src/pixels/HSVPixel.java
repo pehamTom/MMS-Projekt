@@ -40,13 +40,8 @@ public class HSVPixel {
 			return;
 		}
 		
-		if(max > 0.0) {
-			s = delta / max;
-		} else {
-			s = 0.0;
-			h = -1; //undefined
-			return;
-		}
+		s = max == 0 ? 0 : delta / max;
+		
 		if(r >= max) {
 			h = (g-b)/delta;
 		} else if(g >= max) {
@@ -109,7 +104,7 @@ public class HSVPixel {
 	 * 		saturation to be set
 	 */
 	public void setS(double s) {
-		this.s = s;
+		this.s = s > 1.0 ? 1.0 : s;
 	}
 
 	public void setH(double h) {
@@ -117,6 +112,6 @@ public class HSVPixel {
 	}
 
 	public void setV(double v) {
-		this.v = v;
+		this.v = v > 1.0 ? 1.0 : v;
 	}
 }

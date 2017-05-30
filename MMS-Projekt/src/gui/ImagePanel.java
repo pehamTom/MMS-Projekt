@@ -27,6 +27,7 @@ public class ImagePanel extends JPanel {
 	
 	private final ImageModel model;
 	private Tool selectedTool;
+	private Tool defaultTool;
 	
 	/**
 	 * Constructor for this Panel
@@ -71,7 +72,7 @@ public class ImagePanel extends JPanel {
 		g2d.setColor(Color.white);
 		g2d.fillRect(0, 0, dim.width, dim.height);
         if(model.getImage() != null) {
-	        g2d.drawImage(model.getImage(), null, 0, 0);
+	        g2d.drawImage(model.getImage(), null, model.getLeft(), model.getTop());
         }
         
         if(selectedTool != null) {
@@ -87,15 +88,28 @@ public class ImagePanel extends JPanel {
 	 */
 	public void setSelectedTool(Tool selectedTool) {
 		this.selectedTool = selectedTool;
+		if(defaultTool == null) {
+			defaultTool = selectedTool;
+		}
 	}
 	
 	/**
-	 * Removes currently used tool
+	 * Removes currently used tool, sets to default tool
 	 */
 	public void removeSelectedTool() {
-		this.selectedTool = null;
+		this.selectedTool = defaultTool;
 	}
 	
+	/**
+	 * Set default Tool for this ImagePanel
+	 * @param defaulTool
+	 */
+	public void setDefaultTool(Tool defaulTool) {
+		this.defaultTool = defaulTool;
+		if(selectedTool == null) {
+			selectedTool = defaultTool;
+		}
+	}
 	
 	/**
 	 * MouseEventHandler for this Panel
