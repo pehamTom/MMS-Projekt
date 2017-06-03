@@ -58,6 +58,6 @@ public class DigitalHalftoneErrorDiffusionBW implements FilterInterface {
 
 	@Override
 	public String toString(){
-		return "Halftone-ErrorDiffusion";
+		return "Halftone-ErrorDiffusion/BW";
 	}
 }
