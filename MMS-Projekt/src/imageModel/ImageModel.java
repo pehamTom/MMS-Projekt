@@ -212,8 +212,6 @@ public class ImageModel {
 	
 	public void applyRedeyeFilterAt(int x, int y, int size){
 		BufferedImage result = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_RGB);
-		int h = image.getHeight();
-		int w = image.getWidth();
 		
 		RGBAPixel curr = new RGBAPixel(0);
 		for(int i = 0; i < image.getWidth(); i++){

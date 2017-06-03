@@ -31,7 +31,7 @@ public class DigitalHalftoneErrorDiffusionBW implements FilterInterface {
 					curr.setR(0);
 					curr.setG(0);
 				}else{
-					error = curr.getB() - 255;
+					error = avr - 255;
 
 					curr.setB(255);
 					curr.setR(255);
@@ -47,11 +47,11 @@ public class DigitalHalftoneErrorDiffusionBW implements FilterInterface {
 	
 	private double[][] distributeError(double[][] errormap, double error, int x, int y){
 
-		errormap[x + 1][y] += (error / 16) * 7;
-		errormap[x] [y + 1] += (error/ 16) * 5;
-		errormap[x + 1][y + 1] += (error/16) * 1;
+		errormap[x + 1][y] += (error / 16.0) * 7.0;
+		errormap[x] [y + 1] += (error/ 16.0) * 5.0;
+		errormap[x + 1][y + 1] += (error/16.0) * 1.0;
 		if(x - 1 >=  0 ){
-			errormap[x - 1][y + 1] += (error / 16) * 3;
+			errormap[x - 1][y + 1] += (error / 16.0) * 3.0;
 		}
 		return errormap;
 	}
