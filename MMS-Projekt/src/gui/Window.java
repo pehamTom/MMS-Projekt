@@ -108,7 +108,7 @@ public class Window extends JFrame{
         filterMenu.add(createFilterMenuItem(new DigitalHalftonePatternFilter()));
         filterMenu.add(createFilterMenuItem(new DigitalHalftoneErrorDiffusion()));
         filterMenu.add(createFilterMenuItem(new DigitalHalftoneErrorDiffusionBW()));
-        
+        filterMenu.add(createFilterMenuItem(new DigitalHalftoneDittering()));
         filterMenu.add(new QuadrantFlipEffect(imagePanel, model));
 
         //Set up edit menu
