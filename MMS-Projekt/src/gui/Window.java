@@ -214,7 +214,7 @@ public class Window extends JFrame{
 				@Override
 				public boolean accept(File f) {
 					String n = f.getName().toLowerCase();
-					return isValidExtension(n);
+					return isValidExtension(n) || f.isDirectory();
 				}
 			});
 			if(fc.showSaveDialog(thisFrame) == JFileChooser.APPROVE_OPTION && isValidExtension(fc.getSelectedFile().toString())) {

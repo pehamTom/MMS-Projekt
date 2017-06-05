@@ -58,6 +58,8 @@ public class ImageModel {
 	 * 		y-position to set the image to
 	 */
 	public void loadImage(Image image, int x, int y) {
+		this.x = x;
+		this.y = y;
 		if(image == null) {
 			this.image = null;
 		}
@@ -68,7 +70,7 @@ public class ImageModel {
 				this.image = (BufferedImage) image;
 			}else{
 				BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-				bi.getGraphics().drawImage(image, 0, 0, null);
+				bi.getGraphics().drawImage(image, x, y, null);
 				this.image = bi;
 			}
 		}

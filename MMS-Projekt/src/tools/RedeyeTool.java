@@ -27,7 +27,7 @@ public class RedeyeTool extends Tool {
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		if (num > 0){
-			CommandHandler.getInstance().doCommand(new RedEyeImageCommand(model, e.getX(), e.getY(), REDEYETOOL_SIZE));
+			CommandHandler.getInstance().doCommand(new RedEyeImageCommand(model, e.getX()-model.getLeft(), e.getY()-model.getTop(), REDEYETOOL_SIZE));
 			num--;
 		}else{
 			parent.removeSelectedTool();	
@@ -54,7 +54,11 @@ public class RedeyeTool extends Tool {
 	
 	public void actionPerformed(ActionEvent e) {
 		InputHandler input = new InputHandler(parent.getParent());
-		num = input.getInt("How many eyes?");
+		try {
+			num = input.getInt("How many eyes?");
+		} catch(NumberFormatException exep) {
+			return;
+		}
 		
 		parent.setSelectedTool(this);
 	}
