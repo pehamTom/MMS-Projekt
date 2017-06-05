@@ -1,4 +1,3 @@
-# MMS-Projekt
+# MMS-Projekt-Bildbearbeitung
 
-
-It is not yet fully decided what exactly the project is going to be. But it is definitely going to involve some form of user interaction.
+Das Projekt enthält ein Java Applet zur Bearbeitung von Bildern bzw. zur Anwendung von Bildeffekten. Für das GUI wurde Swing verwendet.

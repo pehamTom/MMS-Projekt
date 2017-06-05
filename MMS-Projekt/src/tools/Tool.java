@@ -1,6 +1,5 @@
 package tools;
 
-import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
@@ -17,6 +16,7 @@ import imageModel.ImageModel;
  * @author Tom
  *
  */
+@SuppressWarnings("serial")
 public abstract class Tool extends AbstractAction implements MouseListener, MouseMotionListener {
 
 	protected final ImageModel model;
@@ -50,47 +50,40 @@ public abstract class Tool extends AbstractAction implements MouseListener, Mous
 
 	//===========================================
 	//Not every mouse event has to be implemented by all subclasses
-	//This are just method stubs to handle undimplemented methods
+	//This are just method stubs to handle unimplemented methods
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 

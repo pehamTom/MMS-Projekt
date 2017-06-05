@@ -165,9 +165,10 @@ public class ImageModel {
 		fireImageChangedEvent(rotated); //signify listeners to change
 	}
 	
-	public void moveImage(int newX, int newY) { //Maybe define an event type for this
+	public void moveImage(int newX, int newY) { 
 		this.x = newX;
 		this.y = newY;
+		fireImageChangedEvent(image);
 	}
 	
 	/**

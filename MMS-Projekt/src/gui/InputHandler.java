@@ -42,7 +42,7 @@ public class InputHandler{
 	 * @return
 	 * 			Integer entered by the user
 	 */
-	public int getInt(String dialogMessage) {
+	public int getInt(String dialogMessage) throws NumberFormatException{
 		return Integer.parseInt(JOptionPane.showInputDialog(parentComponent, dialogMessage, "0"));
 	}
 	

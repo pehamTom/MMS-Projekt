@@ -3,7 +3,6 @@ package pixels;
 import java.awt.image.ColorModel;
 import java.awt.image.DirectColorModel;
 
-/** Represent a single Pixel */
 public class RGBAPixel {
 	
 	private int rawRGBA;
@@ -11,7 +10,6 @@ public class RGBAPixel {
 	private int alpha;
 	private int r, g, b;
 	
-	private int y, cb, cr;
 	
 	/**
 	 * Initialize with a raw RGB value
@@ -34,23 +32,14 @@ public class RGBAPixel {
 		this.b = b;
 		this.alpha = alpha;
 		updateRawFromRGB();
-		updateYCbCrFromRGB();
-	}
-	
-	/**
-	 * Initialize with YCbCr Model 
-	 * @param y
-	 * @param cb
-	 * @param cr
-	 */
-	public RGBAPixel(int y, int cb, int cr) {
-		this.y = y;
-		this.cb = cb;
-		this.cr = cr;
-		updateRGBFromYCbCr();
-		updateRawFromRGB();
 	}
 
+	/**
+	 * Initialize with HSV Pixel
+	 * @param hsv
+	 * 		Pixel in HSV Colorspace
+	 * 
+	 */
 	public RGBAPixel(HSVPixel hsv) {
 		double h = hsv.getH();
 		double s = hsv.getS();
@@ -107,37 +96,42 @@ public class RGBAPixel {
 		}
 		this.alpha = 255;
 		updateRawFromRGB();
-		updateYCbCrFromRGB();
 	}
-	/** One color model per JVM is enough */
-	private static DirectColorModel colorModel = null;
 	
-	/** Inline init of color model */
-	private static DirectColorModel getColorModel() {
-		if (colorModel == null) {
-			colorModel = (DirectColorModel) ColorModel.getRGBdefault();
-		}
-		return colorModel;
+	/**
+	 * Initialize with YCbCr Pixel
+	 * @param ycbcrPix
+	 * 			Pixel in YCbCr Color Space
+	 */
+	public RGBAPixel(YCbCrPixel ycbcrPix) {
+		int y = ycbcrPix.getY();
+		int cb = ycbcrPix.getCb();
+		int cr = ycbcrPix.getCr();
+		r = byteRange((int) (y + 1.402*(cr-128)));
+		g = byteRange((int) (y - 0.344136*(cb-128) - 0.714136*(cr-128)));
+		b = byteRange((int) (y + 1.772*(cb-128)));
+		alpha = 255;
 	}
+	
 
 	/** Extract raw pixels red value */
 	public static int getRed(int rgba) {
-		return getColorModel().getRed(rgba);
+		return 0xFF & (rgba >> 16);	//mask out red part of rgba
 	}
 
 	/** Extract raw pixels green value */
 	public static int getGreen(int rgba) {
-		return getColorModel().getGreen(rgba);
+		return 0xFF & (rgba >> 8); 	//mask out green part of rgba
 	}
 
 	/** Extract raw pixels blue value */
 	public static int getBlue(int rgba) {
-		return getColorModel().getBlue(rgba);
+		return 0xFF & rgba;	//mask out blue part of rgba
 	}
 
 	/** Extract raw pixels alpha channel */
 	public static int getAlpha(int rgba) {
-		return getColorModel().getAlpha(rgba);
+		return 0xFF & (rgba >> 24);	//mask out alpha of rgba
 	}
 	
 	/** Create a raw pixel from rgba Values */
@@ -153,31 +147,12 @@ public class RGBAPixel {
 		rawRGBA = generateRGBAPixel(r, g, b, alpha);
 	}
 	
-	/** Create single rgb values form a raw int */
+	/** Create single rgb values from a raw int */
 	private void updateRGBFromInt() {
 		r = RGBAPixel.getRed(rawRGBA);
 		g = RGBAPixel.getGreen(rawRGBA);
 		b = RGBAPixel.getBlue(rawRGBA);
 		alpha = RGBAPixel.getAlpha(rawRGBA);
-	}
-	
-	/** Generate YCbCr values from rgb
-	 * @see http://en.wikipedia.org/wiki/YCbCr and lecture slides */
-	//using the jpeg-standard conversion from the wikipedia article
-	private void updateYCbCrFromRGB() {
-		y = byteRange((int) (0.299*r + 0.587*g + 0.114*b));
-		cb = byteRange((int) (128 - 0.168736*r - 0.331264*g + 0.5*b));
-		cr = byteRange((int) (128 + 0.5*r - 0.418688*g - 0.081312*b));
-	}
-	
-	/** Generate RGB from YCbCr values
-	 * @see http://en.wikipedia.org/wiki/YCbCr and lecture slides */
-	//using the jpeg-standard conversion from the wikipedia article
-	private void updateRGBFromYCbCr() {
-		r = byteRange((int) (y + 1.402*(cr-128)));
-		g = byteRange((int) (y - 0.344136*(cb-128) - 0.714136*(cr-128)));
-		b = byteRange((int) (y + 1.772*(cb-128)));
-		alpha = 255;
 	}
 	
 	/**
@@ -210,7 +185,6 @@ public class RGBAPixel {
 	public void setRawRGBA(int rawRGBA) {
 		this.rawRGBA = rawRGBA;
 		updateRGBFromInt();
-		updateYCbCrFromRGB();
 	}
 
 	public int getAlpha() {
@@ -220,7 +194,6 @@ public class RGBAPixel {
 	public void setAlpha(int alpha) {
 		this.alpha = alpha;
 		updateRawFromRGB();
-		updateYCbCrFromRGB();
 	}
 
 	public int getR() {
@@ -228,9 +201,8 @@ public class RGBAPixel {
 	}
 
 	public void setR(int r) {
-		this.r = r;
+		this.r = byteRange(r);
 		updateRawFromRGB();
-		updateYCbCrFromRGB();
 	}
 
 	public int getG() {
@@ -238,9 +210,8 @@ public class RGBAPixel {
 	}
 
 	public void setG(int g) {
-		this.g = g;
+		this.g = byteRange(g);
 		updateRawFromRGB();
-		updateYCbCrFromRGB();
 	}
 
 	public int getB() {
@@ -248,75 +219,10 @@ public class RGBAPixel {
 	}
 
 	public void setB(int b) {
-		this.b = b;
-		updateRawFromRGB();
-		updateYCbCrFromRGB();
-	}
-
-	public int getY() {
-		return y;
-	}
-
-	public void setY(int y) {
-		this.y = y;
-		updateRGBFromYCbCr();
+		this.b = byteRange(b);
 		updateRawFromRGB();
 	}
-
-	public int getCb() {
-		return cb;
-	}
-
-	public void setCb(int cb) {
-		this.cb = cb;
-		updateRGBFromYCbCr();
-		updateRawFromRGB();
-	}
-
-	public int getCr() {
-		return cr;
-	}
-
-	public void setCr(int cr) {
-		this.cr = cr;
-		updateRGBFromYCbCr();
-		updateRawFromRGB();
-	}
-
-	public static void setColorModel(DirectColorModel colorModel) {
-		RGBAPixel.colorModel = colorModel;
-	}
-	
-	/**
-	 * Maps a value in the interval [0,1] to [0,255]
-	 * @param val
-	 * 			value in the interval [0,1]
-	 * @return
-	 * 		int value in [0,255]
-	 */
 	private int mapToRGBRange(double val) {
 		return (int)(val*255);
-	}
-	
-	@Override
-	public String toString() {
-		StringBuffer buffer = new StringBuffer();
-		
-		buffer.append("r ");
-		buffer.append(r);
-		buffer.append(" g ");
-		buffer.append(g);
-		buffer.append(" b ");
-		buffer.append(b);
-		buffer.append(" a ");
-		buffer.append(alpha);
-		buffer.append(" y ");
-		buffer.append(y);
-		buffer.append(" cb ");
-		buffer.append(cb);
-		buffer.append(" cr ");
-		buffer.append(cr);
-		
-		return buffer.toString();
 	}
 }
