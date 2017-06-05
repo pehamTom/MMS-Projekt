@@ -3,7 +3,6 @@ package pixels;
 import java.awt.image.ColorModel;
 import java.awt.image.DirectColorModel;
 
-/** Represent a single Pixel */
 public class RGBAPixel {
 	
 	private int rawRGBA;
@@ -35,6 +34,12 @@ public class RGBAPixel {
 		updateRawFromRGB();
 	}
 
+	/**
+	 * Initialize with HSV Pixel
+	 * @param hsv
+	 * 		Pixel in HSV Colorspace
+	 * 
+	 */
 	public RGBAPixel(HSVPixel hsv) {
 		double h = hsv.getH();
 		double s = hsv.getS();
@@ -93,6 +98,11 @@ public class RGBAPixel {
 		updateRawFromRGB();
 	}
 	
+	/**
+	 * Initialize with YCbCr Pixel
+	 * @param ycbcrPix
+	 * 			Pixel in YCbCr Color Space
+	 */
 	public RGBAPixel(YCbCrPixel ycbcrPix) {
 		int y = ycbcrPix.getY();
 		int cb = ycbcrPix.getCb();
@@ -102,35 +112,26 @@ public class RGBAPixel {
 		b = byteRange((int) (y + 1.772*(cb-128)));
 		alpha = 255;
 	}
-	/** One color model per JVM is enough */
-	private static DirectColorModel colorModel = null;
 	
-	/** Inline init of color model */
-	private static DirectColorModel getColorModel() {
-		if (colorModel == null) {
-			colorModel = (DirectColorModel) ColorModel.getRGBdefault();
-		}
-		return colorModel;
-	}
 
 	/** Extract raw pixels red value */
 	public static int getRed(int rgba) {
-		return getColorModel().getRed(rgba);
+		return 0xFF & (rgba >> 16);	//mask out red part of rgba
 	}
 
 	/** Extract raw pixels green value */
 	public static int getGreen(int rgba) {
-		return getColorModel().getGreen(rgba);
+		return 0xFF & (rgba >> 8); 	//mask out green part of rgba
 	}
 
 	/** Extract raw pixels blue value */
 	public static int getBlue(int rgba) {
-		return getColorModel().getBlue(rgba);
+		return 0xFF & rgba;	//mask out blue part of rgba
 	}
 
 	/** Extract raw pixels alpha channel */
 	public static int getAlpha(int rgba) {
-		return getColorModel().getAlpha(rgba);
+		return 0xFF & (rgba >> 24);	//mask out alpha of rgba
 	}
 	
 	/** Create a raw pixel from rgba Values */
@@ -146,7 +147,7 @@ public class RGBAPixel {
 		rawRGBA = generateRGBAPixel(r, g, b, alpha);
 	}
 	
-	/** Create single rgb values form a raw int */
+	/** Create single rgb values from a raw int */
 	private void updateRGBFromInt() {
 		r = RGBAPixel.getRed(rawRGBA);
 		g = RGBAPixel.getGreen(rawRGBA);
@@ -221,19 +222,6 @@ public class RGBAPixel {
 		this.b = byteRange(b);
 		updateRawFromRGB();
 	}
-
-
-	public static void setColorModel(DirectColorModel colorModel) {
-		RGBAPixel.colorModel = colorModel;
-	}
-	
-	/**
-	 * Maps a value in the interval [0,1] to [0,255]
-	 * @param val
-	 * 			value in the interval [0,1]
-	 * @return
-	 * 		int value in [0,255]
-	 */
 	private int mapToRGBRange(double val) {
 		return (int)(val*255);
 	}

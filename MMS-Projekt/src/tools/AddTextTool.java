@@ -36,7 +36,7 @@ public class AddTextTool extends Tool {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		CommandHandler.getInstance().doCommand(new AddTextToImageCommand(model, text, e.getX(), e.getY(), size, color));
+		CommandHandler.getInstance().doCommand(new AddTextToImageCommand(model, text, e.getX()-model.getLeft(), e.getY()-model.getTop(), size, color));
 		parent.removeSelectedTool();
 	}
 	
