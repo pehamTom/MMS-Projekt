@@ -98,7 +98,8 @@ public class Window extends JFrame{
         filterMenu.add(createFilterMenuItem(new StrangePatternEffect()));
         filterMenu.add(createFilterMenuItem(new FlipHorizontallyFilter()));
         filterMenu.add(new QuadrantFlipEffect(imagePanel, model));
-
+        filterMenu.add(createFilterMenuItem(new ComicFilter()));
+        
         //Set up edit menu
         editMenu.add(rotateAction);
         editMenu.add(resizeAction);
@@ -170,7 +171,7 @@ public class Window extends JFrame{
 				@Override
 				public boolean accept(File f) {
 					String n = f.getName().toLowerCase();
-					return isValidExtension(n);
+					return isValidExtension(n) || f.isDirectory();
 				}
 			});
 			fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
