@@ -93,8 +93,8 @@ public class QuadrantFlipEffect extends Tool implements FilterInterface {
 	public void draw(Graphics g) {
 		Color prev = g.getColor();
 		g.setColor(Color.BLACK);
-		g.drawLine(model.getWidth()/2, 0, model.getWidth()/2, model.getHeight());
-		g.drawLine(0, model.getHeight()/2, model.getWidth(), model.getHeight()/2);
+		g.drawLine(model.getLeft()+model.getWidth()/2, model.getTop(), model.getLeft()+model.getWidth()/2, model.getTop()+model.getHeight());
+		g.drawLine(model.getLeft(), model.getTop()+model.getHeight()/2, model.getLeft()+model.getWidth(), model.getTop()+model.getHeight()/2);
 		g.setColor(prev);
 	}
 }

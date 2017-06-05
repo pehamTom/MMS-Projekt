@@ -232,7 +232,7 @@ public class Window extends JFrame{
 	};
     
     /**
-     * Rotate image by 90Â° clockwise
+     * Rotate image by 90° clockwise
      */
     @SuppressWarnings("serial")
 	private Action rotateAction = new AbstractAction("Rotate") {

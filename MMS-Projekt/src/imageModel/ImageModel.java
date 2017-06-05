@@ -136,12 +136,17 @@ public class ImageModel {
 	 * 			height to resize Image to
 	 */
 	public void resizeImage(int width, int height) {
+		int oldX = x;
+		int oldY = y;
+		x = y = 0;
 		Image resized = image.getScaledInstance(width, height, Image.SCALE_DEFAULT);
 		BufferedImage resizedBuffered = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = resizedBuffered.createGraphics();
 		g.drawImage(resized, x, y, null);
 		
 		image = resizedBuffered;
+		x = oldX;
+		y = oldY;
 		fireImageChangedEvent(resizedBuffered); //signify listeners to change
 	}
 	
@@ -222,7 +227,7 @@ public class ImageModel {
 				   j > y - (size/2) && j < y + (size/2)){
 					if(curr.getB() + curr.getG() > 0){
 						float redDistribution = curr.getR() / ((curr.getB() + curr.getG())/2.0f);
-						if(redDistribution > 1.5f){
+						if(redDistribution > 3.5f){
 							curr.setR((curr.getB() + curr.getG())/2);
 						}
 					}else{
@@ -249,10 +254,10 @@ public class ImageModel {
 	 */
 	public void cropImage(int startX, int startY, int endX, int endY) {
 		//if coordinates are out of bound, just set them to the edge of the image
-		startX = startX < x ? x : startX;
-		startY = startY < y ? y : startY;
-		endX = endX > x+getWidth() ? x+getWidth() : endX;
-		endY = endY > y+getHeight() ? y+getHeight() : endY;
+		startX = (startX < x ? x : startX) - x;
+		startY = (startY < y ? y : startY) - y;
+		endX = (endX > x+getWidth() ? x+getWidth() : endX) - x;
+		endY = (endY > y+getHeight() ? y+getHeight() : endY) - y;
 		int width = endX-startX;
 		int height = endY-startY;
 		

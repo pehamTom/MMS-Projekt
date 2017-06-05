@@ -27,14 +27,11 @@ public class DigitalHalftoneDittering implements FilterInterface{
 					for(int mj = 0; mj < 4 && (j * 4) + mj < img.getHeight(); mj++){
 						curr.setRawRGBA(img.getRGB((i * 4) + mi,  (j * 4) + mj));
 						avr = (curr.getR() + curr.getG() + curr.getB()) / 3.0;
-						System.out.println(avr);
 						if(avr < dittermatrix[mi][mj]){
-							System.out.println("black");
 							curr.setR(0);
 							curr.setG(0);
 							curr.setB(0);
 						}else{
-							System.out.println("wight");
 							curr.setR(255);
 							curr.setG(255);
 							curr.setB(255);

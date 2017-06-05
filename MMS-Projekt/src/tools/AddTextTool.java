@@ -36,7 +36,9 @@ public class AddTextTool extends Tool {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		CommandHandler.getInstance().doCommand(new AddTextToImageCommand(model, text, e.getX()-model.getLeft(), e.getY()-model.getTop(), size, color));
+		if(text != null) 
+				CommandHandler.getInstance().doCommand(new AddTextToImageCommand(model, text, e.getX()-model.getLeft(), e.getY()-model.getTop(), size, color));
+		
 		parent.removeSelectedTool();
 	}
 	
@@ -59,7 +61,7 @@ public class AddTextTool extends Tool {
 		try {
 			text = input.getString("Type text here");
 			size = input.getInt("Type size of text to be displayed");
-		} catch(NumberFormatException exep) {
+		} catch(NumberFormatException | NullPointerException exep) {
 			return;
 		}
 		color = input.getColor("Select Color");
