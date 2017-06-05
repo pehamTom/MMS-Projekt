@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import filters.FilterInterface;
+import pixels.RGBAPixel;
 
 /**
  * Model responsible for all actions and transformations performed on images in the gui
@@ -209,6 +210,32 @@ public class ImageModel {
 		fireImageChangedEvent(filteredImage);
 	}
 	
+	
+	public void applyRedeyeFilterAt(int x, int y, int size){
+		BufferedImage result = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_RGB);
+		
+		RGBAPixel curr = new RGBAPixel(0);
+		for(int i = 0; i < image.getWidth(); i++){
+			for(int j = 0; j < image.getHeight(); j++){
+				curr.setRawRGBA(image.getRGB(i, j));
+				if(i > x - (size/2) && i < x + (size/2) &&
+				   j > y - (size/2) && j < y + (size/2)){
+					if(curr.getB() + curr.getG() > 0){
+						float redDistribution = curr.getR() / ((curr.getB() + curr.getG())/2.0f);
+						if(redDistribution > 1.5f){
+							curr.setR((curr.getB() + curr.getG())/2);
+						}
+					}else{
+						curr.setR(0);
+					}
+				}
+				result.setRGB(i, j, curr.getRawRGBA());
+			}
+		}
+		
+		this.image = result;
+		fireImageChangedEvent(result);
+	}
 	/**
 	 * Crop Image
 	 * @param startX

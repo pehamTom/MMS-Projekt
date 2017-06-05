@@ -15,6 +15,8 @@ import imageModel.ImageListener;
 import imageModel.ImageModel;
 import tools.AddTextTool;
 import tools.CropTool;
+import tools.RedeyeTool;
+
 import tools.MoveImageTool;
 import tools.Tool;
 
@@ -97,6 +99,10 @@ public class Window extends JFrame{
         filterMenu.add(createFilterMenuItem(new FlipVerticallyFilter()));
         filterMenu.add(createFilterMenuItem(new StrangePatternEffect()));
         filterMenu.add(createFilterMenuItem(new FlipHorizontallyFilter()));
+        filterMenu.add(createFilterMenuItem(new DigitalHalftonePatternFilter()));
+        filterMenu.add(createFilterMenuItem(new DigitalHalftoneErrorDiffusion()));
+        filterMenu.add(createFilterMenuItem(new DigitalHalftoneErrorDiffusionBW()));
+        filterMenu.add(createFilterMenuItem(new DigitalHalftoneDittering()));
         filterMenu.add(new QuadrantFlipEffect(imagePanel, model));
         filterMenu.add(createFilterMenuItem(new ComicFilter()));
         
@@ -105,6 +111,7 @@ public class Window extends JFrame{
         editMenu.add(resizeAction);
         editMenu.add(new CropTool(imagePanel, model));
         editMenu.add(new AddTextTool(imagePanel, model));
+        editMenu.add(new RedeyeTool(imagePanel,model));
         Tool defaultPanelTool = new MoveImageTool(imagePanel, model);
         imagePanel.setDefaultTool(defaultPanelTool);
         editMenu.add(defaultPanelTool);
@@ -225,7 +232,7 @@ public class Window extends JFrame{
 	};
     
     /**
-     * Rotate image by 90° clockwise
+     * Rotate image by 90Â° clockwise
      */
     @SuppressWarnings("serial")
 	private Action rotateAction = new AbstractAction("Rotate") {
